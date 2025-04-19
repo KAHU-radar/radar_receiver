@@ -1,0 +1,22 @@
+{
+  "name": "wx-addon",
+  "version": "0.1.0",
+  "main": "index.js",
+  "gypfile": true,
+  "scripts": {
+    "install": "prebuild-install || node-gyp rebuild",
+    "prebuild": "prebuildify --napi --strip",
+    "build": "node-gyp rebuild"
+  },
+  "dependencies": {
+    "node-addon-api": "^7.1.1",
+    "prebuild-install": "^7.1.0"
+  },
+  "devDependencies": {
+    "prebuildify": "^5.0.0"
+  },
+  "files": [
+    "prebuilds/",
+    "index.js"
+  ]
+}

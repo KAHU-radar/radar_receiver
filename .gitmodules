@@ -1,0 +1,6 @@
+[submodule "deps/radar_pi"]
+	path = deps/radar_pi
+	url = https://github.com/opencpn-radar-pi/radar_pi.git
+[submodule "deps/wxWidgets"]
+	path = deps/wxWidgets
+	url = https://github.com/wxWidgets/wxWidgets.git
