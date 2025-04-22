@@ -2,8 +2,12 @@
   "targets": [
     {
       "target_name": "addon",
-      "sources": [ "src/addon.cpp" ],
+      "sources": [
+        "src/addon.cpp",
+        "src/radar_info_wrapper.cpp",
+      ],
       "include_dirs": [
+        "include",
         "<!(node -p \"require('node-addon-api').include\")",
         "<!(node -p \"require('node-addon-api').include_dir\")",
         "deps/wxWidgets/dist/include/wx-3.3",
