@@ -38,6 +38,7 @@
 
 PLUGIN_BEGIN_NAMESPACE
 
+/*
 #define NOISE                                                                  \
     (0.015) // Allowed covariance of target speed in lat and lon
             // critical for the performance of target tracking
@@ -108,6 +109,7 @@ public:
     Matrix<double, 4, 2> K;
     Matrix<double, 4> I;
 };
+*/
 
 PLUGIN_END_NAMESPACE
 #endif
