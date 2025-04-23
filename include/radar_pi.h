@@ -61,6 +61,8 @@
 #pragma clang diagnostic pop
 #endif
 
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+
 PLUGIN_BEGIN_NAMESPACE
 //using ::NMEA0183;
 
