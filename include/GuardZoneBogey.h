@@ -41,6 +41,7 @@ PLUGIN_BEGIN_NAMESPACE
  Guard Zone Bogey Dialog Specification ;
  =======================================================================================================================
  */
+/*
 class GuardZoneBogey : public wxDialog {
     DECLARE_CLASS(GuardZoneBogey)
     DECLARE_EVENT_TABLE()
@@ -65,12 +66,13 @@ private:
 
     wxWindow* m_parent;
     radar_pi* m_pi;
-
+*/
     /* Controls */
+/*
     wxStaticText* m_bogey_text;
     wxButton* m_confirm_button;
 };
-
+*/
 PLUGIN_END_NAMESPACE
 
 #endif /* _GUARDZONE_H_ */

@@ -42,7 +42,7 @@ PLUGIN_BEGIN_NAMESPACE
 class RadarDraw;
 class RadarCanvas;
 class RadarPanel;
-class GuardZoneBogey;
+//class GuardZoneBogey;
 class RadarInfo;
 class TrailBuffer;
 

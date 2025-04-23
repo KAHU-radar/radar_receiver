@@ -36,6 +36,7 @@
 
 PLUGIN_BEGIN_NAMESPACE
 
+/*
 enum message_status { HIDE, SHOW, SHOW_NO_NMEA, SHOW_CLOSE };
 
 class radar_info_item {
@@ -141,6 +142,7 @@ private:
     wxCheckBox* m_have_variation;
     wxStaticText* m_statistics;
 };
+*/
 
 PLUGIN_END_NAMESPACE
 

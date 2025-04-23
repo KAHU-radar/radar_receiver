@@ -74,12 +74,12 @@ class GuardZone;
 class RadarInfo;
 
 class ControlsDialog;
-class MessageBox;
+//class MessageBox;
 class OptionsDialog;
 class RadarReceive;
 class RadarControl;
 class radar_pi;
-class GuardZoneBogey;
+//class GuardZoneBogey;
 class Arpa;
 class GPSKalmanFilter;
 class RaymarineLocate;
@@ -701,7 +701,7 @@ public:
     NavicoLocate* m_navico_locator;
     RaymarineLocate* m_raymarine_locator;
 
-    MessageBox* m_pMessageBox;
+//    MessageBox* m_pMessageBox;
     wxWindow* m_parent_window;
 
     // Check for AIS targets inside ARPA zone
@@ -794,7 +794,7 @@ public:
 
 #define HEADING_TIMEOUT (5)
 
-    GuardZoneBogey* m_bogey_dialog;
+//    GuardZoneBogey* m_bogey_dialog;
     time_t m_alarm_sound_timeout;
     time_t m_guard_bogey_timeout; // If we haven't seen bogeys for this long we
                                   // reset confirm
