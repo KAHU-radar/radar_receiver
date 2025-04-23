@@ -33,7 +33,7 @@
 #include "pi_common.h"
 
 PLUGIN_BEGIN_NAMESPACE
-
+/*
 template <typename Ty, int N, int M = N> struct Matrix {
     typedef Ty value_type;
 
@@ -215,6 +215,6 @@ Matrix<Ty, N, M> operator-(Ty scalar, const Matrix<Ty, N, M>& a)
 {
     return -a + scalar;
 }
-
+*/
 PLUGIN_END_NAMESPACE
 #endif
