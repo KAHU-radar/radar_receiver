@@ -35,7 +35,7 @@
 #include "radar_pi.h"
 
 PLUGIN_BEGIN_NAMESPACE
-
+/*
 class OptionsDialog : public wxDialog {
 public:
     OptionsDialog(wxWindow* parent, radar_pi* pi, PersistentSettings& settings,
@@ -127,7 +127,7 @@ private:
     wxCheckBox* m_ARPA;
     wxCheckBox* m_Reports;
 };
-
+*/
 PLUGIN_END_NAMESPACE
 
 #endif /* _OPTIONSDIALOG_H_ */

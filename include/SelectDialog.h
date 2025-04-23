@@ -49,7 +49,7 @@
 class radar_pi;
 
 namespace RadarPlugin {
-
+/*
 class SelectDialog : public wxDialog {
 public:
     SelectDialog(wxWindow* parent, radar_pi* pi);
@@ -57,7 +57,7 @@ public:
     radar_pi* m_pi;
     wxCheckBox* m_selected[RT_MAX];
 };
-
+*/
 } // namespace
 
 #endif /* _SELECTDIALOG_H_ */

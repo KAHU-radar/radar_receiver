@@ -36,7 +36,7 @@
 #include "radar_pi.h"
 
 PLUGIN_BEGIN_NAMESPACE
-
+/*
 const double ZOOM_FACTOR_CENTER
     = .9; // On how big a part of the PPI do we draw the radar picture
 const double ZOOM_FACTOR_OFFSET
@@ -92,7 +92,7 @@ private:
 
     DECLARE_EVENT_TABLE();
 };
-
+*/
 PLUGIN_END_NAMESPACE
 
 #endif
