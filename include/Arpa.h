@@ -41,7 +41,7 @@
 #include "RadarInfo.h"
 
 PLUGIN_BEGIN_NAMESPACE
-
+/*
 //    Forward definitions
 class KalmanFilter;
 
@@ -179,7 +179,7 @@ private:
     void SearchDopplerTargets();
     bool IsAtLeastOneRadarTransmitting();
 };
-
+*/
 PLUGIN_END_NAMESPACE
 
 #endif
