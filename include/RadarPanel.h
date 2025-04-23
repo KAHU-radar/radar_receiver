@@ -35,7 +35,7 @@
 #include "radar_pi.h"
 
 PLUGIN_BEGIN_NAMESPACE
-
+/*
 class RadarPanel : public wxPanel {
 public:
     RadarPanel(radar_pi* pi, RadarInfo* ri, wxWindow* parent);
@@ -61,7 +61,7 @@ private:
     wxStaticText* m_text;
     wxSize m_best_size;
 };
-
+*/
 PLUGIN_END_NAMESPACE
 
 #endif

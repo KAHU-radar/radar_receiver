@@ -35,7 +35,7 @@
 #include "radar_pi.h"
 
 PLUGIN_BEGIN_NAMESPACE
-
+/*
 class RadarDraw {
 public:
     static RadarDraw* make_Draw(RadarInfo* ri, int draw_method);
@@ -53,7 +53,7 @@ public:
 
     static void GetDrawingMethods(wxArrayString& methods);
 };
-
+*/
 PLUGIN_END_NAMESPACE
 
 #endif

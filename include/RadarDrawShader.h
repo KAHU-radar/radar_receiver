@@ -37,7 +37,7 @@
 PLUGIN_BEGIN_NAMESPACE
 
 #define SHADER_COLOR_CHANNELS (4) // RGB + Alpha
-
+/*
 class RadarDrawShader : public RadarDraw {
 public:
     RadarDrawShader(RadarInfo* ri)
@@ -86,7 +86,7 @@ private:
 
     void Reset();
 };
-
+*/
 PLUGIN_END_NAMESPACE
 
 #endif /* _RADARDRAWSHADER_H_ */

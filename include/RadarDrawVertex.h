@@ -36,7 +36,7 @@
 #include "drawutil.h"
 
 PLUGIN_BEGIN_NAMESPACE
-
+/*
 #define BUFFER_SIZE (2000000)
 
 class RadarDrawVertex : public RadarDraw {
@@ -100,7 +100,7 @@ private:
     unsigned int m_count;
     bool m_oom;
 };
-
+*/
 PLUGIN_END_NAMESPACE
 
 #endif /* _RADARDRAWVERTEX_H_ */
