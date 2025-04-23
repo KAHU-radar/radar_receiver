@@ -569,6 +569,7 @@ public:
     // void PrepareRadarImage(int angle); remove?
 
     //    The required PlugIn Methods
+ /*
     int Init(void);
     bool DeInit(void);
 
@@ -616,7 +617,9 @@ public:
     void OnGuardZoneDialogClose(RadarInfo* ri);
     void ConfirmGuardZoneBogeys();
     void ResetOpenGLContext();
+ */
     void logBinaryData(const wxString& what, const uint8_t* data, int size);
+ /*
     void StartRadarLocators(size_t r);
     void StopRadarLocators();
 
@@ -633,12 +636,14 @@ public:
     bool HaveRadarSerialNo(size_t r);
     RadarLocationInfo& GetRadarLocationInfo(size_t r);
 
+ */
     void SetRadarHeading(double heading = nan(""), bool isTrue = false);
     double GetHeadingTrue()
     {
         wxCriticalSectionLocker lock(m_exclusive);
         return m_hdt;
     }
+ /*
     time_t GetHeadingTrueTimeout()
     {
         wxCriticalSectionLocker lock(m_exclusive);
@@ -666,11 +671,12 @@ public:
         wxCriticalSectionLocker lock(m_exclusive);
         return m_bpos_set;
     }
-
+ */
     wxLongLong GetBootMillis() { return m_boot_time; }
+ /*
     bool IsOpenGLEnabled() { return m_opengl_mode == OPENGL_ON; }
     wxGLContext* GetChartOpenGLContext();
-
+ */
  /*
     bool HaveOverlay()
     {
@@ -682,6 +688,7 @@ public:
         return false;
     }
  */
+ /*
     bool m_guard_bogey_confirmed;
     bool m_guard_bogey_seen; // Saw guardzone bogeys on last check
     int m_max_canvas; // Number of canvasses in OCPN -1, 0 == single canvas, > 0
@@ -693,16 +700,17 @@ public:
     wxFont m_font; // The dialog font at a normal size
     wxFont m_fat_font; // The dialog font at a bigger size, bold
     wxFont m_small_font; // The dialog font at a smaller size
-
+ */
     PersistentSettings m_settings;
     RadarInfo* m_radar[RADARS];
+ /*
     wxString m_perspective[RADARS]; // Temporary storage of window location when
                                     // plugin is disabled
+ */
     NavicoLocate* m_navico_locator;
     RaymarineLocate* m_raymarine_locator;
-
 //    MessageBox* m_pMessageBox;
-    wxWindow* m_parent_window;
+/*    wxWindow* m_parent_window;
 
     // Check for AIS targets inside ARPA zone
     vector<AisArpa> m_ais_in_arpa_zone; // Array for AIS targets in ARPA zone(s)
@@ -712,7 +720,7 @@ public:
                              //  AIS targets.
 
     bool m_ais_drawgl_broken;
-
+*/
 private:
     void RadarSendState(void);
     void UpdateState(void);
