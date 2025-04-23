@@ -32,6 +32,7 @@ PLUGIN_BEGIN_NAMESPACE
 
 /* support ascii plus degree symbol for now pack font in a single texture 16x8
  */
+/*
 #define DEGREE_GLYPH 127
 #define MIN_GLYPH 32
 #define MAX_GLYPH 128
@@ -71,7 +72,7 @@ private:
     unsigned int m_texobj;
     int tex_w, tex_h;
 };
-
+*/
 PLUGIN_END_NAMESPACE
 
 #endif // guard

@@ -125,13 +125,15 @@ public:
 //----------------------------------------------------------------------------------------------------------
 //    Radar Control Dialog Specification
 //----------------------------------------------------------------------------------------------------------
-class ControlsDialog : public wxDialog {
+class ControlsDialog /* : public wxDialog */ {
+ /*
     DECLARE_CLASS(ControlsDialog)
     DECLARE_EVENT_TABLE()
-
+ */
 public:
     ControlsDialog()
     {
+     /*
         // Initialize all members that need initialization
         m_hide = false;
         m_hide_temporarily = true;
@@ -246,10 +248,11 @@ public:
             m_ctrl[i].hasOff = false;
             m_ctrl[i].hasAutoAdjustable = false;
         }
+     */
     };
 
     ~ControlsDialog();
-
+/*
     bool Create(wxWindow* parent, radar_pi* pi, RadarInfo* ri,
         wxWindowID id = wxID_ANY, const wxString& caption = _("Radar"),
         const wxPoint& pos = wxDefaultPosition);
@@ -277,8 +280,8 @@ public:
     wxBoxSizer* m_top_sizer;
     wxBoxSizer* m_control_sizer;
     wxPoint m_panel_position;
+*/
     ControlInfo m_ctrl[CT_MAX];
-
 protected:
     void DefineControl(ControlType ct, int autoValues, wxString auto_names[],
         int defaultValue, int minValue, int maxValue, int stepValue,
@@ -319,7 +322,7 @@ protected:
             }
         }
     }
-
+/*
     bool m_hide;
     bool m_hide_temporarily;
     time_t m_auto_hide_timeout; // At what time do we hide the dialog
@@ -528,6 +531,7 @@ public:
     void OnEnd_Bearing_Value(wxCommandEvent& event);
     void OnARPAClick(wxCommandEvent& event);
     void OnAlarmClick(wxCommandEvent& event);
+ */
 };
 
 class RadarButton : public wxButton {
@@ -535,7 +539,7 @@ public:
     RadarButton() {
 
     };
-
+/*
     RadarButton(ControlsDialog* parent, wxWindowID id, wxSize buttonSize,
         const wxString& label)
     {
@@ -583,6 +587,7 @@ public:
         wxStaticText::SetLabel(label);
         SetSize(GetTextExtent(label));
     }
+*/
 };
 
 class RadarControlButton : public wxButton {
@@ -592,7 +597,7 @@ public:
     RadarControlButton() {
 
     };
-
+/*
     RadarControlButton(ControlsDialog* parent, wxWindowID id,
         const wxString& label, ControlInfo& ctrl, RadarControlItem* item,
         const wxString& newUnit = wxT(""), const wxString& newComment = wxT(""))
@@ -646,10 +651,12 @@ private:
     ControlsDialog* m_parent;
     radar_pi* m_pi; // could be accessed through m_parent but the M_SETTINGS
                     // macro requires it directly in this class.0
+                    */
 };
 
 class RadarRangeControlButton : public RadarControlButton {
 public:
+ /*
     RadarRangeControlButton(ControlsDialog* parent, wxWindowID id,
         wxSize buttonSize, const wxString& label, RadarControlItem* item)
     {
@@ -678,6 +685,7 @@ public:
     virtual void AdjustValue(int adjustment);
     bool ToggleState(); // Returns desired new state for Auto button show
     void SetRangeLabel();
+ */
 };
 
 // This sets up the initializer macro in the constructor of the

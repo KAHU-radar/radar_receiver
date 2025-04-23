@@ -31,18 +31,18 @@
 
 #ifndef _DRAWUTIL_H_
 #define _DRAWUTIL_H_
-
 #include "pi_common.h"
 
 PLUGIN_BEGIN_NAMESPACE
 
+/*
 extern void DrawArc(float cx, float cy, float r, float start_angle,
     float arc_angle, int num_segments);
 extern void DrawOutlineArc(
     double r1, double r2, double a1, double a2, bool stippled);
 extern void DrawFilledArc(double r1, double r2, double a1, double a2);
 extern void CheckOpenGLError(const wxString& after);
-
+*/
 typedef struct {
     float x;
     float y;
@@ -111,10 +111,10 @@ public:
         return M_XYI((angle + m_spokes) % m_spokes, radius);
     };
 };
-
+/*
 extern void DrawRoundRect(
     float x, float y, float width, float height, float radius = 0.0);
-
+*/
 PLUGIN_END_NAMESPACE
 
 #endif
