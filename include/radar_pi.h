@@ -721,6 +721,7 @@ public:
 
     bool m_ais_drawgl_broken;
 */
+ /*
 private:
     void RadarSendState(void);
     void UpdateState(void);
@@ -740,18 +741,21 @@ private:
     void ScheduleWindowRefresh();
     void SetOpenGLMode(OpenGLMode mode);
     int GetArpaTargetCount(void);
-
+ */
     wxCriticalSection
         m_exclusive; // protects callbacks that come from multiple radars
 
     double m_hdt; // this is the heading that the pi is using for all heading
                   // operations, in degrees. m_hdt will come from the radar if
                   // available else from the NMEA stream.
+ /*
     time_t m_hdt_timeout; // When we consider heading is lost
     double m_hdm; // Last magnetic heading obtained
     time_t m_hdm_timeout; // When we consider heading is lost
 public:
+ */
     HeadingSource m_heading_source;
+ /*
     int m_chart_overlay[MAX_CHART_CANVAS]; // The overlay for canvas x, -1 =
                                            // none, otherwise = radar #
     int m_context_menu_canvas_index; // PrepareContextMenu() was last called for
@@ -815,8 +819,9 @@ public:
     double m_COGAvg; // Average COG over m_COGTable
     double m_cog; // Value of m_COGAvg at rotation time
     time_t m_cog_timeout; // When m_cog will be set again
+ */
     double m_vp_rotation; // Last seen vp->rotation
-
+/*
     // Keep last state of ContextMenu state sent, to avoid redraws
     bool m_context_menu_show;
     bool m_context_menu_arpa;
@@ -837,7 +842,9 @@ public:
 private:
     bool m_initialized; // True if Init() succeeded and DeInit() not called yet.
     bool m_first_init; // True in first Init() call.
+ */
     wxLongLong m_boot_time; // millis when started
+ /*
 
     OpenGLMode m_opengl_mode;
     volatile bool m_opengl_mode_changed;
@@ -847,7 +854,7 @@ private:
 
     wxTimer* m_timer;
     wxTimer* m_update_timer;
-
+ */
 //    DECLARE_EVENT_TABLE()
 };
 
