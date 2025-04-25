@@ -244,7 +244,7 @@ bool RadarInfo::Init() {
     m_control = RadarFactory::MakeRadarControl(m_radar_type, m_pi, this);
     // add context menu for control
     wxString t;
-    wxMenu dummy_menu;
+    //wxMenu dummy_menu;
     t = _("");
     t << _("Control ") << m_name;
     //m_pi->m_mi3[m_radar] = new wxMenuItem(&dummy_menu, -1, t);
@@ -290,6 +290,7 @@ bool RadarInfo::Init() {
     }
   }
   wxLog::FlushActive();  // Flush any log messages written by the thread
+  m_control_dialog = RadarFactory::MakeControlsDialog(m_radar_type, m_radar);
   return true;
 }
 

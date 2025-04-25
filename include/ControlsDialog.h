@@ -129,7 +129,6 @@ class ControlsDialog  {
 public:
     ControlsDialog()
     {
-     /*
         for (size_t i = 0; i < ARRAY_SIZE(m_ctrl); i++) {
             m_ctrl[i].type = CT_NONE;
             m_ctrl[i].names = 0;
@@ -137,7 +136,6 @@ public:
             m_ctrl[i].hasOff = false;
             m_ctrl[i].hasAutoAdjustable = false;
         }
-     */
     };
 
     ~ControlsDialog();

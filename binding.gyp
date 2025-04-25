@@ -11,6 +11,7 @@
         "src/ControlsDialog.cpp",
 
         "deps/radar_pi/src/RadarFactory.cpp",
+        "deps/radar_pi/src/socketutil.cpp",
 
         "deps/radar_pi/src/emulator/EmulatorControl.cpp",
         "deps/radar_pi/src/emulator/EmulatorControlsDialog.cpp",
@@ -51,6 +52,7 @@
         "<!(node -p \"require('node-addon-api').gyp\")"
       ],
       "cflags_cc": [
+        "-g", "-O0",
         "<!(/usr/bin/env wx-config --cxxflags)",
         "-std=c++17",
         "-frtti",

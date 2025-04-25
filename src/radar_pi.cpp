@@ -33,6 +33,7 @@
 #define RADAR_PI_GLOBALS
 
 #include "radar_pi.h"
+#include "RadarInfo.h"
 /*
 #include "MessageBox.h"
 #include "OptionsDialog.h"
@@ -179,13 +180,12 @@ radar_pi::~radar_pi() {}
  * they can enable/disable multiple times in the overview. Grrr!
  *
  */
-/*
 int radar_pi::Init(void) {
   if (m_initialized) {
     // Whoops, shouldn't happen
-    return PLUGIN_OPTIONS;
+    return 0; //PLUGIN_OPTIONS;
   }
-
+/*
   if (m_first_init) {
 #ifdef __WXMSW__
     WSADATA wsaData;
@@ -381,7 +381,8 @@ int radar_pi::Init(void) {
   m_update_timer = new wxTimer(this, UPDATE_TIMER_ID);
   m_update_timer->Start(UPDATE_INTERVAL);
 
-  return PLUGIN_OPTIONS;
+*/
+  return 0; // PLUGIN_OPTIONS;
 }
 
 void radar_pi::StartRadarLocators(size_t r) {
@@ -423,7 +424,7 @@ bool radar_pi::DeInit(void) {
   if (!m_initialized) {
     return false;
   }
-
+/*
   LOG_INFO(wxT("DeInit of plugin"));
 
   m_initialized = false;
@@ -438,7 +439,7 @@ bool radar_pi::DeInit(void) {
     delete m_update_timer;
     m_update_timer = 0;
   }
-
+*/
   StopRadarLocators();
 
   // Stop processing in all radars.
@@ -449,7 +450,7 @@ bool radar_pi::DeInit(void) {
   }
 
   StopRadarLocators();
-
+/*
   if (m_bogey_dialog) {
     delete m_bogey_dialog;  // This will also save its current pos in m_settings
     m_bogey_dialog = 0;
@@ -484,9 +485,10 @@ bool radar_pi::DeInit(void) {
 
   // No need to delete wxWindow stuff, wxWidgets does this for us.
   LOG_VERBOSE(wxT("DeInit of plugin done"));
+*/
   return true;
 }
-
+/*
 int radar_pi::GetAPIVersionMajor() { return MY_API_VERSION_MAJOR; }
 
 int radar_pi::GetAPIVersionMinor() { return MY_API_VERSION_MINOR; }

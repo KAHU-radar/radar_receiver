@@ -569,9 +569,9 @@ public:
     // void PrepareRadarImage(int angle); remove?
 
     //    The required PlugIn Methods
- /*
     int Init(void);
     bool DeInit(void);
+ /*
 
     int GetAPIVersionMajor();
     int GetAPIVersionMinor();
@@ -619,9 +619,9 @@ public:
     void ResetOpenGLContext();
  */
     void logBinaryData(const wxString& what, const uint8_t* data, int size);
- /*
     void StartRadarLocators(size_t r);
     void StopRadarLocators();
+ /*
 
     void UpdateAllControlStates(bool all);
 
@@ -847,9 +847,10 @@ public:
         m_expected_position; // updated own position at time of last GPS update
     ExtendedPosition m_last_fixed; // best estimate position at last measurement
 private:
-    bool m_initialized; // True if Init() succeeded and DeInit() not called yet.
-    bool m_first_init; // True in first Init() call.
  */
+
+    bool m_initialized; // True if Init() succeeded and DeInit() not called yet.
+//    bool m_first_init; // True in first Init() call.
     wxLongLong m_boot_time; // millis when started
  /*
 
