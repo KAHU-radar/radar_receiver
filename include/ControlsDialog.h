@@ -185,24 +185,18 @@ protected:
     }
 };
 
-class RadarButton {
-public:
-    RadarButton() {
-
-    };
-};
-
-class RadarControlButton : public wxButton {
-    friend class RadarRangeControlButton;
+class RadarControlButton {
+//    friend class RadarRangeControlButton;
 
 public:
     RadarControlButton() {
 
     };
-};
+    virtual void UpdateLabel(bool force = false);
+    virtual void SetFirstLine(wxString first_line);
+    wxString GetLabel() const;
 
-class RadarRangeControlButton : public RadarControlButton {
-public:
+    wxString firstLine;
 };
 
 // This sets up the initializer macro in the constructor of the

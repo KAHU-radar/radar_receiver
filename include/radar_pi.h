@@ -659,19 +659,21 @@ public:
         wxCriticalSectionLocker lock(m_exclusive);
         return m_var_source;
     }
+ */
     double GetCOG()
     {
         wxCriticalSectionLocker lock(m_exclusive);
         return m_cog;
     }
     HeadingSource GetHeadingSource() { return m_heading_source; }
+ /*
     bool IsInitialized() { return m_initialized; }
+ */
     bool IsBoatPositionValid()
     {
         wxCriticalSectionLocker lock(m_exclusive);
         return m_bpos_set;
     }
- */
     wxLongLong GetBootMillis() { return m_boot_time; }
  /*
     bool IsOpenGLEnabled() { return m_opengl_mode == OPENGL_ON; }
@@ -748,11 +750,11 @@ private:
     double m_hdt; // this is the heading that the pi is using for all heading
                   // operations, in degrees. m_hdt will come from the radar if
                   // available else from the NMEA stream.
- /*
     time_t m_hdt_timeout; // When we consider heading is lost
     double m_hdm; // Last magnetic heading obtained
     time_t m_hdm_timeout; // When we consider heading is lost
 public:
+ /*
  */
     HeadingSource m_heading_source;
  /*
@@ -762,8 +764,9 @@ public:
                                      // this canvas
     bool m_render_busy;
     int m_draw_time_overlay_ms[MAX_CHART_CANVAS];
-
+ */
     bool m_bpos_set;
+ /*
     time_t m_bpos_timestamp;
 
     // Variation. Used to convert magnetic into true heading.
@@ -772,7 +775,9 @@ public:
     // probably have an outdated variation model, so is less preferred. Besides,
     // some devices transmit invalid (zero) values. So we also let non-zero
     // values prevail.
+    */
     double m_var; // local magnetic variation, in degrees
+ /*
     VariationSource m_var_source;
     time_t m_var_timeout;
 
@@ -803,9 +808,9 @@ public:
     volatile bool m_notify_radar_window_viz;
     volatile bool m_notify_control_dialog;
     wxLongLong m_notify_time_ms;
-
+ */
 #define HEADING_TIMEOUT (5)
-
+/*
 //    GuardZoneBogey* m_bogey_dialog;
     time_t m_alarm_sound_timeout;
     time_t m_guard_bogey_timeout; // If we haven't seen bogeys for this long we
@@ -817,7 +822,9 @@ public:
     double m_COGTable[MAX_COG_AVERAGE_SECONDS];
     int m_COGAvgSec; // Default 15, comes from OCPN settings
     double m_COGAvg; // Average COG over m_COGTable
+ */
     double m_cog; // Value of m_COGAvg at rotation time
+ /*
     time_t m_cog_timeout; // When m_cog will be set again
  */
     double m_vp_rotation; // Last seen vp->rotation

@@ -6,6 +6,12 @@
         "src/addon.cpp",
         "src/radar_info_wrapper.cpp",
 
+        "src/radar_pi.cpp",
+        "src/RadarInfo.cpp",
+        "src/ControlsDialog.cpp",
+
+        "deps/radar_pi/src/RadarFactory.cpp",
+
         "deps/radar_pi/src/emulator/EmulatorControl.cpp",
         "deps/radar_pi/src/emulator/EmulatorControlsDialog.cpp",
         "deps/radar_pi/src/emulator/EmulatorReceive.cpp",

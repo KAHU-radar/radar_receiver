@@ -219,7 +219,7 @@ public:
     int m_old_range;
     int m_dir_lat;
     int m_dir_lon;
-    TrailBuffer* m_trails;
+//    TrailBuffer* m_trails;
 
     // Timed Transmit
     time_t m_idle_standby; // When we will change to standby
