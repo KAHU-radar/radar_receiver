@@ -135,12 +135,16 @@ public:
             m_ctrl[i].autoNames = 0;
             m_ctrl[i].hasOff = false;
             m_ctrl[i].hasAutoAdjustable = false;
+            m_button[i] = 0;
         }
     };
 
     ~ControlsDialog();
 
+    void Create(radar_pi *m_pi, RadarInfo *m_ri);
+
     ControlInfo m_ctrl[CT_MAX];
+    RadarControlButton *m_button[CT_MAX];
 protected:
     void DefineControl(ControlType ct, int autoValues, wxString auto_names[],
         int defaultValue, int minValue, int maxValue, int stepValue,
@@ -187,9 +191,17 @@ class RadarControlButton {
 //    friend class RadarRangeControlButton;
 
 public:
-    RadarControlButton() {
+    RadarControlButton(ControlsDialog* parent, ControlInfo& ctrl, RadarControlItem* item) {
+        m_parent = parent;
+        m_ctrl = ctrl.type;
+        m_item = item;
+        parent->m_button[ctrl.type] = this;
+    }
 
-    };
+    ControlsDialog *m_parent;
+    ControlType m_ctrl;
+    RadarControlItem* m_item;
+   
     virtual void UpdateLabel(bool force = false);
     virtual void SetFirstLine(wxString first_line);
     wxString GetLabel() const;

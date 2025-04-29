@@ -291,6 +291,7 @@ bool RadarInfo::Init() {
   }
   wxLog::FlushActive();  // Flush any log messages written by the thread
   m_control_dialog = RadarFactory::MakeControlsDialog(m_radar_type, m_radar);
+  m_control_dialog->Create(m_pi, this);
   return true;
 }
 
