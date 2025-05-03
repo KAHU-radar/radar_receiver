@@ -59,6 +59,10 @@ enum RadarControlState {
     RCS_AUTO_9
 };
 
+class RadarControlItem;
+
+typedef std::function<void(RadarControlItem *item)> NotifyFN;
+
 class RadarControlItem {
 public:
     static const int VALUE_NOT_SET = -10000;
@@ -74,8 +78,9 @@ public:
         m_min = VALUE_NOT_SET;
         m_max = VALUE_NOT_SET;
         m_fraction = 0;
+        m_notify = 0;
     }
-
+ 
     // The copy constructor
     RadarControlItem(const RadarControlItem& other)
     {
@@ -108,6 +113,7 @@ public:
         }
         m_value = v;
         m_state = s;
+        if (m_notify) (*m_notify)(this);
     };
 
     void UpdateState(RadarControlState s)
@@ -119,6 +125,7 @@ public:
             m_button_s = s;
         }
         m_state = s;
+        if (m_notify) (*m_notify)(this);
     };
 
     void Update(int v) { Update(v, RCS_MANUAL); };
@@ -210,6 +217,10 @@ public:
             + m_min + .5);
     }
 
+    void SetNotifyFN(NotifyFN *fn) {
+        m_notify = fn;
+    }
+
 protected:
     wxCriticalSection m_exclusive;
     int m_value;
@@ -219,6 +230,7 @@ protected:
     bool m_mod;
     int m_max; // added for Raymarine
     int m_min;
+    NotifyFN *m_notify;
 
 public:
     double m_fraction;

@@ -67,6 +67,13 @@ enum {
 
 #define COURSE_SAMPLES (16)
 
+#include <functional>
+
+// Use std::function to accept any callable with that signature
+typedef std::function<void(SpokeBearing angle, SpokeBearing bearing,
+                           uint8_t* data, size_t len, int range_meters,
+                           wxLongLong time, GeoPosition pos)> ProcessRadarSpokeFN;
+
 class RadarInfo {
     friend class TrailBuffer;
 
@@ -354,6 +361,13 @@ public:
         return -1;
     }
 
+    void SetProcessRadarSpokeFN(ProcessRadarSpokeFN *fn) {
+        process_radar_spoke_fn = fn;
+    }
+
+    void SetTransmit(bool transmit);
+    void SetNotifyFN(NotifyFN *notify);
+
 private:
     void ResetSpokes();
     void RenderRadarImage2(
@@ -378,6 +392,7 @@ private:
     int m_previous_orientation;
 
     GeoPosition m_radar_position;
+    ProcessRadarSpokeFN *process_radar_spoke_fn;
 };
 
 PLUGIN_END_NAMESPACE

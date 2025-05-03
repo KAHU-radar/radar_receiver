@@ -143,6 +143,66 @@ RadarInfo::RadarInfo(radar_pi *pi, int radar) {
 //  for (size_t z = 0; z < GUARD_ZONES; z++) {
 //    m_guard_zone[z] = new GuardZone(m_pi, this, z);
 //  }
+  process_radar_spoke_fn = 0;
+}
+
+void RadarInfo::SetNotifyFN(NotifyFN *notify) {
+  m_state.SetNotifyFN(notify);
+  m_boot_state.SetNotifyFN(notify);
+  m_orientation.SetNotifyFN(notify);
+  m_view_center.SetNotifyFN(notify);
+  for (size_t i = 0; i < MAX_CHART_CANVAS; i++)
+      m_overlay_canvas[i].SetNotifyFN(notify);
+  m_range.SetNotifyFN(notify);
+  m_gain.SetNotifyFN(notify);
+  m_interference_rejection.SetNotifyFN(notify);
+  m_target_separation.SetNotifyFN(notify);
+  m_noise_rejection.SetNotifyFN(notify);
+  m_target_boost.SetNotifyFN(notify);
+  m_target_expansion.SetNotifyFN(notify);
+  m_sea.SetNotifyFN(notify);
+  m_sea_state.SetNotifyFN(notify);
+  m_rain.SetNotifyFN(notify);
+  m_ftc.SetNotifyFN(notify);
+  m_mode.SetNotifyFN(notify);
+  m_all_to_auto.SetNotifyFN(notify);
+  m_scan_speed.SetNotifyFN(notify);
+  m_bearing_alignment.SetNotifyFN(notify);
+  m_range_adjustment.SetNotifyFN(notify);
+  for (size_t i = 0; i < NO_TRANSMIT_ZONES; i++) {
+      m_no_transmit_start[i].SetNotifyFN(notify);
+      m_no_transmit_end[i].SetNotifyFN(notify);
+  }
+  m_antenna_height.SetNotifyFN(notify);
+  m_antenna_forward.SetNotifyFN(notify);
+  m_antenna_starboard.SetNotifyFN(notify);
+  m_main_bang_size.SetNotifyFN(notify);
+  m_accent_light.SetNotifyFN(notify);
+  m_local_interference_rejection.SetNotifyFN(notify);
+  m_side_lobe_suppression.SetNotifyFN(notify);
+  m_target_trails.SetNotifyFN(notify);
+  m_trails_motion.SetNotifyFN(notify);
+  m_target_on_ppi.SetNotifyFN(notify);
+  m_next_state_change.SetNotifyFN(notify);
+  m_timed_idle.SetNotifyFN(notify);
+  m_timed_run.SetNotifyFN(notify);
+  m_doppler.SetNotifyFN(notify);
+  m_doppler_threshold.SetNotifyFN(notify);
+  m_autotrack_doppler.SetNotifyFN(notify);
+  m_threshold.SetNotifyFN(notify);
+  m_tune_fine.SetNotifyFN(notify);
+  m_tune_coarse.SetNotifyFN(notify);
+  m_main_bang_suppression.SetNotifyFN(notify);
+  m_warmup_time.SetNotifyFN(notify);
+  m_signal_strength.SetNotifyFN(notify);
+  m_display_timing.SetNotifyFN(notify);
+  m_stc.SetNotifyFN(notify);
+  m_magnetron_time.SetNotifyFN(notify);
+  m_rotation_period.SetNotifyFN(notify);
+  m_stc_curve.SetNotifyFN(notify);
+  m_coarse_tune.SetNotifyFN(notify);
+  m_magnetron_current.SetNotifyFN(notify);
+  m_color_gain.SetNotifyFN(notify);
 }
 
 void RadarInfo::Shutdown() {
@@ -389,6 +449,12 @@ void RadarInfo::ResetSpokes() {
     m_history[i].pos.lat = 0.;
     m_history[i].pos.lon = 0.;
   }
+
+  if (process_radar_spoke_fn) {
+    for (size_t r = 0; r < m_spokes; r++) {
+      (*process_radar_spoke_fn)(0, r, zap, m_spoke_len_max, 0, 0, pos);
+    }
+  }
 /*
   if (m_draw_panel.draw) {
     for (size_t r = 0; r < m_spokes; r++) {
@@ -524,6 +590,10 @@ void RadarInfo::ProcessRadarSpoke(SpokeBearing angle, SpokeBearing bearing, uint
     trail_len--;
   }
 
+  if (process_radar_spoke_fn) {
+    (*process_radar_spoke_fn)(angle, bearing, data, len, range_meters, time_rec, m_history[bearing].pos);
+  }
+  
   /*
   bool draw_trails_on_overlay = M_SETTINGS.trails_on_overlay;
   if (m_draw_overlay.draw && !draw_trails_on_overlay) {
@@ -1711,5 +1781,21 @@ NetworkAddress RadarInfo::GetRadarInterfaceAddress() {
   wxCriticalSectionLocker lock(m_exclusive);
   return m_radar_interface_address;
 }
+
+void RadarInfo::SetTransmit(bool transmit) {
+  RadarState state = (RadarState)m_state.GetButton();
+
+  // If we already have a running timer, then turn timed_idle_mode off
+  if (m_next_state_change.GetValue() > 1 &&
+      (m_timed_idle_hardware || m_idle_transmit > 0 || m_idle_standby > 0)) {
+    m_timed_idle.UpdateState(RCS_OFF);
+  }
+  if (transmit) { //state == RADAR_STANDBY || state == RADAR_STOPPING || state == RADAR_SPINNING_DOWN) {
+    RequestRadarState(RADAR_TRANSMIT);
+  } else {
+    RequestRadarState(RADAR_STANDBY);
+  }
+}
+
 
 PLUGIN_END_NAMESPACE

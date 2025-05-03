@@ -4,6 +4,7 @@
 #include <napi.h>
 #include "radar_pi.h"
 #include "RadarInfo.h"
+#include "RadarControlItem.h"
 
 class RadarInfoWrapper : public Napi::ObjectWrap<RadarInfoWrapper> {
 public:
@@ -12,13 +13,16 @@ public:
     RadarInfoWrapper(const Napi::CallbackInfo& info);
 //    void Init(const Napi::CallbackInfo& info);
     void Shutdown(const Napi::CallbackInfo& info);
+    Napi::Value SetProperty(const Napi::CallbackInfo& info);
+    void SetTransmit(const Napi::CallbackInfo& info);
     Napi::Value GetType(const Napi::CallbackInfo& info);
     Napi::Value GetProperties(const Napi::CallbackInfo& info);
+    ssize_t GetPropertyIndexByItem(PLUGIN_NAMESPACE::RadarControlItem *item);
 
 private:
-//    Napi::Value Bar(const Napi::CallbackInfo& info);
     PLUGIN_NAMESPACE::radar_pi* radar;
-//    PLUGIN_NAMESPACE::RadarInfo* radar_info_;
+    Napi::ThreadSafeFunction process_radar_spoke_fn;
+    Napi::ThreadSafeFunction notify_fn;
 };
 
 #endif
