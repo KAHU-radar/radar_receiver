@@ -71,6 +71,7 @@ void ControlsDialog::Create(radar_pi *m_pi, RadarInfo *m_ri) {
   #define CONTROL_BTN_GENERAL(CTRL, name) m_button[CTRL] = new RadarControlButton(this, m_ctrl[CTRL], &name)
   #define CONTROL_BTN(CTRL, member) CONTROL_BTN_GENERAL(CTRL, m_ri->member)
   #define CONTROL_BTN_COND(CTRL, member) if (m_ctrl[CTRL].type) { CONTROL_BTN(CTRL, member); }
+  CONTROL_BTN_COND(CT_STATE, m_state);
   CONTROL_BTN_COND(CT_NOISE_REJECTION, m_noise_rejection);
   CONTROL_BTN_COND(CT_THRESHOLD, m_threshold);
   CONTROL_BTN_COND(CT_TARGET_EXPANSION, m_target_expansion);

@@ -252,18 +252,20 @@ int radar_pi::Init(void) {
   m_heading_source = HEADING_NONE;
   m_vp_rotation = 0.;
   m_arpa_max_range = BASE_ARPA_DIST;
-
+*/
   // Set default settings before we load config. Prevents random behavior on uninitalized behavior.
   // For instance, LOG_XXX messages before config is loaded.
   m_settings.verbose = 0;
   m_settings.overlay_transparency = DEFAULT_OVERLAY_TRANSPARENCY;
-  g_verbose = 0;
+  // g_verbose = 0;
   m_settings.refreshrate = 1;
   m_settings.threshold_blue = 255;
   m_settings.threshold_red = 255;
   m_settings.threshold_green = 255;
   m_settings.enable_cog_heading = false;
   m_settings.AISatARPAoffset = 50;
+  m_settings.range_units = RANGE_METRIC;
+  /*
   m_ais_drawgl_broken = false;
 
   // Get a pointer to the opencpn display canvas, to use as a parent for the UI
