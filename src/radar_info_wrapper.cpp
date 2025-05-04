@@ -208,25 +208,69 @@ ssize_t RadarInfoWrapper::GetPropertyIndexByItem(PLUGIN_NAMESPACE::RadarControlI
 }
 
 Napi::Value RadarInfoWrapper::SetProperty(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
     if (info.Length() < 2 || !info[0].IsString() || !info[1].IsNumber()) {
-        Napi::TypeError::New(info.Env(), "Expected a string property name and an integer value").ThrowAsJavaScriptException();
-        return info.Env().Null();
+        Napi::TypeError::New(env, "Expected a string property name and an integer value").ThrowAsJavaScriptException();
+        return env.Null();
     }
     ssize_t property_index = GetPropertyIndexByName(info[0].As<Napi::String>().Utf8Value());
     if (property_index < 0) {
-        Napi::TypeError::New(info.Env(), "Unknown property name").ThrowAsJavaScriptException();
-        return info.Env().Null();
+        Napi::TypeError::New(env, "Unknown property name").ThrowAsJavaScriptException();
+        return env.Null();
     }
     PLUGIN_NAMESPACE::ControlsDialog *dlg = radar->m_radar[0]->m_control_dialog;
     PLUGIN_NAMESPACE::RadarControlButton *button = dlg->m_button[property_index];
     if (!button) {
-        Napi::TypeError::New(info.Env(), "Property not supported by this radar type").ThrowAsJavaScriptException();
-        return info.Env().Null();
+        Napi::TypeError::New(env, "Property not supported by this radar type").ThrowAsJavaScriptException();
+        return env.Null();
     }
     PLUGIN_NAMESPACE::ControlInfo *ctrl = &dlg->m_ctrl[property_index];
     PLUGIN_NAMESPACE::RadarControlItem *item = button->m_item;
 
     item->Update(info[1].As<Napi::Number>().Int32Value());
+}
+
+Napi::Value RadarInfoWrapper::GetProperty(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    if (info.Length() < 1 || !info[0].IsString()) {
+        Napi::TypeError::New(env, "Expected a string property name").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+    ssize_t property_index = GetPropertyIndexByName(info[0].As<Napi::String>().Utf8Value());
+    if (property_index < 0) {
+        Napi::TypeError::New(env, "Unknown property name").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+    PLUGIN_NAMESPACE::ControlsDialog *dlg = radar->m_radar[0]->m_control_dialog;
+    PLUGIN_NAMESPACE::RadarControlButton *button = dlg->m_button[property_index];
+    if (!button) {
+        Napi::TypeError::New(env, "Property not supported by this radar type").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+    PLUGIN_NAMESPACE::RadarControlItem *item = button->m_item;
+
+    return RadarControlItemToNode(env, item);
+}
+
+Napi::Value RadarInfoWrapper::GetPropertyType(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    if (info.Length() < 1 || !info[0].IsString()) {
+        Napi::TypeError::New(env, "Expected a string property name").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+    ssize_t property_index = GetPropertyIndexByName(info[0].As<Napi::String>().Utf8Value());
+    if (property_index < 0) {
+        Napi::TypeError::New(env, "Unknown property name").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+    PLUGIN_NAMESPACE::ControlsDialog *dlg = radar->m_radar[0]->m_control_dialog;
+    PLUGIN_NAMESPACE::RadarControlButton *button = dlg->m_button[property_index];
+    if (!button) {
+        Napi::TypeError::New(env, "Property not supported by this radar type").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+    PLUGIN_NAMESPACE::ControlInfo *ctrl = &dlg->m_ctrl[property_index];
+    ControlInfoToNode(env, ctrl);
 }
 
 Napi::Value RadarInfoWrapper::GetProperties(const Napi::CallbackInfo& info) { 
@@ -243,14 +287,14 @@ Napi::Value RadarInfoWrapper::GetProperties(const Napi::CallbackInfo& info) {
     }
  
     Napi::Env env = info.Env();
-    Napi::Array result = Napi::Array::New(env, nr_controls);
-
-    size_t result_i = 0;
-
+    Napi::Object result = Napi::Object::New(env);
+    
     for (size_t i = 0; i < PLUGIN_NAMESPACE::CT_MAX; i++) {
         PLUGIN_NAMESPACE::RadarControlButton *button = dlg->m_button[i];
         if (button) {
-            result[result_i++] = RadarControlInfoItemToNode(env, &dlg->m_ctrl[i], button->m_item);
+         
+            result.Set(control_type_identifiers[dlg->m_ctrl[i].type],
+                       RadarControlInfoItemToNode(env, &dlg->m_ctrl[i], button->m_item));
        }
     }
     
@@ -262,8 +306,10 @@ Napi::Function RadarInfoWrapper::GetClass(Napi::Env env) {
       //InstanceMethod("init", &RadarInfoWrapper::Init),
       InstanceMethod("shutdown", &RadarInfoWrapper::Shutdown),
       InstanceMethod("setTransmit", &RadarInfoWrapper::SetTransmit),
-      InstanceMethod("setProperty", &RadarInfoWrapper::SetProperty),
       InstanceMethod("getType", &RadarInfoWrapper::GetType),
+      InstanceMethod("setProperty", &RadarInfoWrapper::SetProperty),
+      InstanceMethod("getProperty", &RadarInfoWrapper::GetProperty),
+      InstanceMethod("getPropertyType", &RadarInfoWrapper::GetPropertyType),
       InstanceMethod("getProperties", &RadarInfoWrapper::GetProperties)
     });
 }

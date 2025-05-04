@@ -16,6 +16,8 @@ public:
     Napi::Value SetProperty(const Napi::CallbackInfo& info);
     void SetTransmit(const Napi::CallbackInfo& info);
     Napi::Value GetType(const Napi::CallbackInfo& info);
+    Napi::Value GetProperty(const Napi::CallbackInfo& info);
+    Napi::Value GetPropertyType(const Napi::CallbackInfo& info);
     Napi::Value GetProperties(const Napi::CallbackInfo& info);
     ssize_t GetPropertyIndexByItem(PLUGIN_NAMESPACE::RadarControlItem *item);
 
