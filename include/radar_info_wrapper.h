@@ -13,7 +13,7 @@ public:
     RadarInfoWrapper(const Napi::CallbackInfo& info);
 //    void Init(const Napi::CallbackInfo& info);
     void Shutdown(const Napi::CallbackInfo& info);
-    Napi::Value SetProperty(const Napi::CallbackInfo& info);
+    void SetProperty(const Napi::CallbackInfo& info);
     void SetTransmit(const Napi::CallbackInfo& info);
     Napi::Value GetType(const Napi::CallbackInfo& info);
     Napi::Value GetProperty(const Napi::CallbackInfo& info);

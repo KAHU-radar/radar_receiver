@@ -60,9 +60,14 @@ Napi::Value ControlInfoToNode(Napi::Env env, PLUGIN_NAMESPACE::ControlInfo *ctrl
     return tobj;
 }
 
-Napi::Value RadarControlItemToNode(Napi::Env env, PLUGIN_NAMESPACE::RadarControlItem *item) {
+Napi::Value RadarControlItemToNode(Napi::Env env, PLUGIN_NAMESPACE::ControlInfo *ctrl, PLUGIN_NAMESPACE::RadarControlItem *item) {
     Napi::Object vobj = Napi::Object::New(env);
-    vobj.Set("value", item->GetValue());
+
+    if (ctrl->names && (ctrl->nameCount > 0) && (item->GetValue() < ctrl->nameCount)) {
+        vobj.Set("value", ctrl->names[item->GetValue()]);
+    } else {
+        vobj.Set("value", item->GetValue());
+    }
     vobj.Set("state", (int) item->GetState());
     vobj.Set("mod", item->IsModified());
     vobj.Set("min", item->GetMin());
@@ -73,7 +78,7 @@ Napi::Value RadarControlItemToNode(Napi::Env env, PLUGIN_NAMESPACE::RadarControl
 Napi::Value RadarControlInfoItemToNode(Napi::Env env, PLUGIN_NAMESPACE::ControlInfo *ctrl, PLUGIN_NAMESPACE::RadarControlItem *item) {
     Napi::Object obj = Napi::Object::New(env);
     obj.Set("type", ControlInfoToNode(env, ctrl));
-    obj.Set("value", RadarControlItemToNode(env, item));
+    obj.Set("value", RadarControlItemToNode(env, ctrl, item));
     return obj;
 }
 
@@ -207,27 +212,42 @@ ssize_t RadarInfoWrapper::GetPropertyIndexByItem(PLUGIN_NAMESPACE::RadarControlI
     return -1;
 }
 
-Napi::Value RadarInfoWrapper::SetProperty(const Napi::CallbackInfo& info) {
+void RadarInfoWrapper::SetProperty(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
-    if (info.Length() < 2 || !info[0].IsString() || !info[1].IsNumber()) {
+    if (info.Length() < 2 || !info[0].IsString()) {
         Napi::TypeError::New(env, "Expected a string property name and an integer value").ThrowAsJavaScriptException();
-        return env.Null();
+        return;
     }
     ssize_t property_index = GetPropertyIndexByName(info[0].As<Napi::String>().Utf8Value());
     if (property_index < 0) {
         Napi::TypeError::New(env, "Unknown property name").ThrowAsJavaScriptException();
-        return env.Null();
+        return;
     }
     PLUGIN_NAMESPACE::ControlsDialog *dlg = radar->m_radar[0]->m_control_dialog;
     PLUGIN_NAMESPACE::RadarControlButton *button = dlg->m_button[property_index];
     if (!button) {
         Napi::TypeError::New(env, "Property not supported by this radar type").ThrowAsJavaScriptException();
-        return env.Null();
+        return;
     }
     PLUGIN_NAMESPACE::ControlInfo *ctrl = &dlg->m_ctrl[property_index];
     PLUGIN_NAMESPACE::RadarControlItem *item = button->m_item;
 
-    item->Update(info[1].As<Napi::Number>().Int32Value());
+    if (info[1].IsNumber()) {
+        item->Update(info[1].As<Napi::Number>().Int32Value());
+    } else if (info[1].IsString() && ctrl->names && (ctrl->nameCount > 0)) {
+        int value;
+        for (value = 0; value < ctrl->nameCount; value++) {
+            if (ctrl->names[value] == info[1].As<Napi::String>().Utf8Value()) {
+             item->Update(value);
+             return;
+           }
+        }
+       Napi::TypeError::New(env, "Unknown enum value").ThrowAsJavaScriptException();
+       return;
+   } else {
+       Napi::TypeError::New(env, "Expected an integer value for a non-enum property").ThrowAsJavaScriptException();
+       return;
+   }
 }
 
 Napi::Value RadarInfoWrapper::GetProperty(const Napi::CallbackInfo& info) {
@@ -247,9 +267,10 @@ Napi::Value RadarInfoWrapper::GetProperty(const Napi::CallbackInfo& info) {
         Napi::TypeError::New(env, "Property not supported by this radar type").ThrowAsJavaScriptException();
         return env.Null();
     }
+    PLUGIN_NAMESPACE::ControlInfo *ctrl = &dlg->m_ctrl[property_index];
     PLUGIN_NAMESPACE::RadarControlItem *item = button->m_item;
 
-    return RadarControlItemToNode(env, item);
+    return RadarControlItemToNode(env, ctrl, item);
 }
 
 Napi::Value RadarInfoWrapper::GetPropertyType(const Napi::CallbackInfo& info) {
