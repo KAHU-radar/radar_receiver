@@ -6,6 +6,21 @@
 #include "RadarInfo.h"
 #include "RadarControlItem.h"
 
+class TimedUpdateThread : public wxThread {
+public:
+    TimedUpdateThread(PLUGIN_NAMESPACE::radar_pi* pi);
+    ~TimedUpdateThread();
+    void Shutdown(void);
+    volatile bool m_is_shutdown;
+protected:
+    void* Entry(void);
+private:
+    PLUGIN_NAMESPACE::radar_pi* m_pi;
+    volatile bool m_shutdown;
+    wxCriticalSection m_exclusive;
+};
+
+
 class RadarInfoWrapper : public Napi::ObjectWrap<RadarInfoWrapper> {
 public:
     static Napi::Function GetClass(Napi::Env env);
@@ -23,6 +38,7 @@ public:
 
 private:
     PLUGIN_NAMESPACE::radar_pi* radar;
+    TimedUpdateThread* timed_update_thread;
     Napi::ThreadSafeFunction process_radar_spoke_fn;
     Napi::ThreadSafeFunction notify_fn;
 };

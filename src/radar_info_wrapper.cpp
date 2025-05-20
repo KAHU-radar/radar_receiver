@@ -31,6 +31,34 @@ struct NotifyData {
     PLUGIN_NAMESPACE::RadarControlItem *item;
 };
 
+TimedUpdateThread::TimedUpdateThread(PLUGIN_NAMESPACE::radar_pi* pi) : wxThread(wxTHREAD_JOINABLE) {
+    Create(64 * 1024); // Stack size
+    m_pi = pi;
+    m_shutdown = false;
+    m_is_shutdown = true;
+    SetPriority(wxPRIORITY_MAX);
+    LOG_INFO(wxT("Timed update thread created, prio= %i"), GetPriority());
+}
+
+void TimedUpdateThread::Shutdown(void) { m_shutdown = true; }
+
+TimedUpdateThread::~TimedUpdateThread()
+    {
+        while (!m_is_shutdown) {
+            wxMilliSleep(50);
+        }
+    }
+
+void* TimedUpdateThread::Entry(void) {
+    wxTimerEvent dummy;
+    m_is_shutdown = false;
+    while (!m_shutdown) {
+        m_pi->TimedUpdate(dummy);
+        wxMilliSleep(500);
+    }
+    return 0;
+}
+
 Napi::Value ControlInfoToNode(Napi::Env env, PLUGIN_NAMESPACE::ControlInfo *ctrl) {
     Napi::Object tobj = Napi::Object::New(env);
     tobj.Set("id", control_type_identifiers[ctrl->type]);
@@ -93,6 +121,12 @@ RadarInfoWrapper::RadarInfoWrapper(const Napi::CallbackInfo& info) : Napi::Objec
     radar = new PLUGIN_NAMESPACE::radar_pi(NULL);
     radar->Init();
     radar->m_radar[0] = new PLUGIN_NAMESPACE::RadarInfo(radar, 0);
+    timed_update_thread = new TimedUpdateThread(radar);
+    if (timed_update_thread->Run() != wxTHREAD_NO_ERROR) {
+        wxLogError(wxT("unable to start timed update thread"));
+    } else {
+        LOG_INFO(wxT("timed update thread started"));
+    }
 
     process_radar_spoke_fn = NULL;
     if ((info.Length() > 1) && info[1].IsFunction()) {
@@ -170,6 +204,12 @@ RadarInfoWrapper::RadarInfoWrapper(const Napi::CallbackInfo& info) : Napi::Objec
 
 
 void RadarInfoWrapper::Shutdown(const Napi::CallbackInfo& info) {
+    if (timed_update_thread) {
+        timed_update_thread->Shutdown();
+        timed_update_thread->Wait();
+        delete timed_update_thread;
+        timed_update_thread = 0;
+    }
     radar->m_radar[0]->Shutdown();
     radar->DeInit();
     if (process_radar_spoke_fn) process_radar_spoke_fn.Release();

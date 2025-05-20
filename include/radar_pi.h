@@ -690,9 +690,9 @@ public:
         return false;
     }
  */
- /*
     bool m_guard_bogey_confirmed;
     bool m_guard_bogey_seen; // Saw guardzone bogeys on last check
+ /*
     int m_max_canvas; // Number of canvasses in OCPN -1, 0 == single canvas, > 0
                       // multi
     int m_current_canvas_index;
@@ -739,7 +739,9 @@ private:
     void UpdateCOGAvg(double cog);
     void OnTimerNotify(wxTimerEvent& event);
     void TimedControlUpdate();
+ */
     void TimedUpdate(wxTimerEvent& event);
+ /*
     void ScheduleWindowRefresh();
     void SetOpenGLMode(OpenGLMode mode);
     int GetArpaTargetCount(void);
@@ -777,8 +779,8 @@ public:
     // values prevail.
     */
     double m_var; // local magnetic variation, in degrees
- /*
     VariationSource m_var_source;
+ /*
     time_t m_var_timeout;
 
     wxFileConfig* m_pconfig;

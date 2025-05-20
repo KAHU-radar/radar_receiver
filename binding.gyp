@@ -9,7 +9,9 @@
         "src/radar_pi.cpp",
         "src/RadarInfo.cpp",
         "src/ControlsDialog.cpp",
+        "src/Arpa.cpp",
 
+        "deps/radar_pi/src/Kalman.cpp",
         "deps/radar_pi/src/RadarFactory.cpp",
         "deps/radar_pi/src/socketutil.cpp",
 

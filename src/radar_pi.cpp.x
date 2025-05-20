@@ -33,9 +33,6 @@
 #define RADAR_PI_GLOBALS
 
 #include "radar_pi.h"
-
-#include "Arpa.h"
-#include "GuardZone.h"
 #include "RadarInfo.h"
 /*
 #include "MessageBox.h"
@@ -188,27 +185,26 @@ int radar_pi::Init(void) {
     // Whoops, shouldn't happen
     return 0; //PLUGIN_OPTIONS;
   }
-
-//  if (m_first_init) {
-//#ifdef __WXMSW__
-//    WSADATA wsaData;
-//    // Initialize Winsock
-//    DWORD r = WSAStartup(MAKEWORD(2, 2), &wsaData);
-//    if (r != 0) {
-//      wxLogError(wxT("Unable to initialise Windows Sockets, error %d"), r);
-//      // Might as well give up now
-//      return 0;
-//    }
-//    LOG_TRANSMIT(wxT("Windows sockets initialized"));
-//#endif
+  if (m_first_init) {
+#ifdef __WXMSW__
+    WSADATA wsaData;
+    // Initialize Winsock
+    DWORD r = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (r != 0) {
+      wxLogError(wxT("Unable to initialise Windows Sockets, error %d"), r);
+      // Might as well give up now
+      return 0;
+    }
+    LOG_TRANSMIT(wxT("Windows sockets initialized"));
+#endif
 
 //    AddLocaleCatalog(_T("opencpn-radar_pi"));
 
 //    m_pconfig = GetOCPNConfigObject();
-//    m_first_init = false;
-//  }
+    m_first_init = false;
+  }
 
-//  time_t now = time(0);
+  time_t now = time(0);
 
   // Font can change so initialize every time
 //  m_font = GetOCPNGUIScaledFont_PlugIn(_T("Dialog"));
@@ -223,8 +219,8 @@ int radar_pi::Init(void) {
 //  m_context_menu_canvas_index = -1;
 
   m_var = 0.0;
-  m_var_source = VARIATION_SOURCE_NONE;
-//  m_bpos_set = false;
+//  m_var_source = VARIATION_SOURCE_NONE;
+  m_bpos_set = false;
 //  m_ownship.lat = nan("");
 //  m_ownship.lon = nan("");
 //  m_cursor_pos.lat = nan("");
@@ -232,8 +228,8 @@ int radar_pi::Init(void) {
 //  m_right_click_pos.lat = nan("");
 //  m_right_click_pos.lon = nan("");
 
-  m_guard_bogey_seen = false;
-  m_guard_bogey_confirmed = false;
+//  m_guard_bogey_seen = false;
+//  m_guard_bogey_confirmed = false;
 //  m_sent_toolbar_button = TB_NONE;
 //  m_toolbar_button = TB_NONE;
 //  m_opengl_mode_changed = false;
@@ -245,17 +241,17 @@ int radar_pi::Init(void) {
 //  m_alarm_sound_timeout = 0;
 //  m_guard_bogey_timeout = 0;
 //  m_bpos_timestamp = now;
-//  m_hdt = 0.0;
-//  m_hdt_timeout = now + WATCHDOG_TIMEOUT;
-//  m_hdm_timeout = now + WATCHDOG_TIMEOUT;
+  m_hdt = 0.0;
+  m_hdt_timeout = now + WATCHDOG_TIMEOUT;
+  m_hdm_timeout = now + WATCHDOG_TIMEOUT;
 //  m_var_timeout = now + WATCHDOG_TIMEOUT;
 //  m_cog_timeout = now;
-//  m_cog = 0.;
+  m_cog = 0.;
 //  m_COGAvg = 0.;
-//  m_heading_source = HEADING_NONE;
-//  m_vp_rotation = 0.;
+  m_heading_source = HEADING_NONE;
+  m_vp_rotation = 0.;
 //  m_arpa_max_range = BASE_ARPA_DIST;
-
+  
   // Set default settings before we load config. Prevents random behavior on uninitalized behavior.
   // For instance, LOG_XXX messages before config is loaded.
   m_settings.verbose = 0;
@@ -280,21 +276,21 @@ int radar_pi::Init(void) {
 //  m_pMessageBox->Create(m_parent_window, this);
 //  LOG_INFO(wxT(PLUGIN_VERSION_WITH_DATE));
 
-//  m_navico_locator = 0;
-//  m_raymarine_locator = 0;
+  m_navico_locator = 0;
+  m_raymarine_locator = 0;
 
   // Create objects before config, so config can set data in it
   // This does not start any threads or generate any UI.
-//  for (size_t r = 0; r < RADARS; r++) {
-//    m_radar[r] = new RadarInfo(this, r);
-//    m_settings.show_radar[r] = true;
-//    m_settings.dock_radar[r] = false;
-//    m_settings.window_pos[r] = wxPoint(30 + 540 * r, 120);
+  for (size_t r = 0; r < RADARS; r++) {
+    m_radar[r] = new RadarInfo(this, r);
+    m_settings.show_radar[r] = true;
+    m_settings.dock_radar[r] = false;
+    m_settings.window_pos[r] = wxPoint(30 + 540 * r, 120);
 
-   // #206: Discussion on whether at this point the contour length
-   // is really 6. The assert() proves this in debug (alpha) releases.
-//    assert(m_radar[r]->m_min_contour_length == 6);
-//  }
+    // #206: Discussion on whether at this point the contour length
+    // is really 6. The assert() proves this in debug (alpha) releases.
+    assert(m_radar[r]->m_min_contour_length == 6);
+  }
 
 //  m_GPS_filter = new GPSKalmanFilter();
 
@@ -330,21 +326,21 @@ int radar_pi::Init(void) {
 
   // CacheSetToolbarToolBitmaps(BM_ID_RED, BM_ID_BLANK);
   // Now that the settings are made we can initialize the RadarInfos
-//  for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
-//    m_radar[r]->Init();
-//    StartRadarLocators(r);
-//  }
+  for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
+    m_radar[r]->Init();
+    StartRadarLocators(r);
+  }
   // and get rid of any radars we're not using
-//  for (size_t r = M_SETTINGS.radar_count; r < RADARS; r++) {
-//    if (m_radar[r]) delete m_radar[r];
-//    m_radar[r] = 0;
-//  }
+  for (size_t r = M_SETTINGS.radar_count; r < RADARS; r++) {
+    if (m_radar[r]) delete m_radar[r];
+    m_radar[r] = 0;
+  }
 
 //  for (size_t r = 0; r < MAX_CHART_CANVAS; r++) {
 //    m_draw_time_overlay_ms[r] = 0;
 //  }
 
-//  m_initialized = true;
+  m_initialized = true;
 //  SetRadarWindowViz();
 //  TimedControlUpdate();
 
@@ -361,14 +357,14 @@ int radar_pi::Init(void) {
 //  wxMenuItem *mi5 = new wxMenuItem(&dummy_menu, -1, _("Delete radar target"));
 //  wxMenuItem *mi6 = new wxMenuItem(&dummy_menu, -1, _("Delete all radar targets"));
 
-//#ifdef __WXMSW__
-//  wxFont *qFont = OCPNGetFont(_("Menu"), 10);
-//  mi1->SetFont(*qFont);
-//  mi2->SetFont(*qFont);
-//  mi4->SetFont(*qFont);
-//  mi5->SetFont(*qFont);
-//  mi6->SetFont(*qFont);
-//#endif
+#ifdef __WXMSW__
+  wxFont *qFont = OCPNGetFont(_("Menu"), 10);
+  mi1->SetFont(*qFont);
+  mi2->SetFont(*qFont);
+  mi4->SetFont(*qFont);
+  mi5->SetFont(*qFont);
+  mi6->SetFont(*qFont);
+#endif
 
 //  m_context_menu_show_id = AddCanvasContextMenuItem(mi1, this);
 //  m_context_menu_hide_id = AddCanvasContextMenuItem(mi2, this);
@@ -379,7 +375,7 @@ int radar_pi::Init(void) {
 //  m_context_menu_arpa = false;
 //  SetCanvasContextMenuItemViz(m_context_menu_show_id, false);
 
-//  LOG_VERBOSE(wxT("Initialized plugin transmit=%d/%d "), m_settings.show_radar[0], m_settings.show_radar[1]);
+  LOG_VERBOSE(wxT("Initialized plugin transmit=%d/%d "), m_settings.show_radar[0], m_settings.show_radar[1]);
 
 //  m_notify_time_ms = 0;
 //  m_timer = new wxTimer(this, TIMER_ID);
@@ -1188,8 +1184,6 @@ void radar_pi::TimedControlUpdate() {
   UpdateState();
 }
 
-*/
- 
 void radar_pi::TimedUpdate(wxTimerEvent &event) {
   // Started in Init(), running every 500 ms
   // No screen output in this thread
@@ -1207,7 +1201,6 @@ void radar_pi::TimedUpdate(wxTimerEvent &event) {
   // PushNMEABuffer(nmea);
 
   // update own ship position to best estimate
-  /*
   ExtendedPosition intermediate_pos;
   if (m_predicted_position_initialised) {
     m_GPS_filter->Predict(&m_last_fixed, &m_expected_position);
@@ -1222,7 +1215,6 @@ void radar_pi::TimedUpdate(wxTimerEvent &event) {
       }
     }
   }
-  */
 
   // refresh ARPA targets
   for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
@@ -1248,7 +1240,7 @@ void radar_pi::TimedUpdate(wxTimerEvent &event) {
     }
   }
 
-//  UpdateHeadingPositionState();
+  UpdateHeadingPositionState();
 
   // Check the age of "radar_seen", if too old radar_seen = false
   bool any_data_seen = false;
@@ -1268,7 +1260,6 @@ void radar_pi::TimedUpdate(wxTimerEvent &event) {
       m_radar[r]->UpdateTransmitState();
     }
   }
-/*
   if (any_data_seen && m_settings.show) {
     CheckGuardZoneBogeys();
   }
@@ -1276,10 +1267,8 @@ void radar_pi::TimedUpdate(wxTimerEvent &event) {
   if (m_settings.pass_heading_to_opencpn && m_heading_source >= HEADING_RADAR_HDM) {
     PassHeadingToOpenCPN();
   }
-*/
 }
 
-/*
 void radar_pi::UpdateAllControlStates(bool all) {
   for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
     m_radar[r]->UpdateControlState(all);
