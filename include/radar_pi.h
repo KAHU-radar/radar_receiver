@@ -850,7 +850,7 @@ private:
  */
 
     bool m_initialized; // True if Init() succeeded and DeInit() not called yet.
-//    bool m_first_init; // True in first Init() call.
+    bool m_first_init; // True in first Init() call.
     wxLongLong m_boot_time; // millis when started
  /*
 

@@ -185,79 +185,79 @@ int radar_pi::Init(void) {
     // Whoops, shouldn't happen
     return 0; //PLUGIN_OPTIONS;
   }
-/*
-  if (m_first_init) {
-#ifdef __WXMSW__
-    WSADATA wsaData;
-    // Initialize Winsock
-    DWORD r = WSAStartup(MAKEWORD(2, 2), &wsaData);
-    if (r != 0) {
-      wxLogError(wxT("Unable to initialise Windows Sockets, error %d"), r);
-      // Might as well give up now
-      return 0;
-    }
-    LOG_TRANSMIT(wxT("Windows sockets initialized"));
-#endif
 
-    AddLocaleCatalog(_T("opencpn-radar_pi"));
+//  if (m_first_init) {
+//#ifdef __WXMSW__
+//    WSADATA wsaData;
+//    // Initialize Winsock
+//    DWORD r = WSAStartup(MAKEWORD(2, 2), &wsaData);
+//    if (r != 0) {
+//      wxLogError(wxT("Unable to initialise Windows Sockets, error %d"), r);
+//      // Might as well give up now
+//      return 0;
+//    }
+//    LOG_TRANSMIT(wxT("Windows sockets initialized"));
+//#endif
 
-    m_pconfig = GetOCPNConfigObject();
-    m_first_init = false;
-  }
+//    AddLocaleCatalog(_T("opencpn-radar_pi"));
 
-  time_t now = time(0);
+//    m_pconfig = GetOCPNConfigObject();
+//    m_first_init = false;
+//  }
+
+//  time_t now = time(0);
 
   // Font can change so initialize every time
-  m_font = GetOCPNGUIScaledFont_PlugIn(_T("Dialog"));
-  m_fat_font = m_font;
-  m_fat_font.SetWeight(wxFONTWEIGHT_BOLD);
-  m_fat_font.SetPointSize(m_font.GetPointSize() + 1);
-  m_small_font.SetPointSize(m_font.GetPointSize() - 1);
-  m_max_canvas = 0;
-  for (int i = 0; i < MAX_CHART_CANVAS; i++) {
-    m_chart_overlay[i] = -1;
-  }
-  m_context_menu_canvas_index = -1;
+//  m_font = GetOCPNGUIScaledFont_PlugIn(_T("Dialog"));
+//  m_fat_font = m_font;
+//  m_fat_font.SetWeight(wxFONTWEIGHT_BOLD);
+//  m_fat_font.SetPointSize(m_font.GetPointSize() + 1);
+//  m_small_font.SetPointSize(m_font.GetPointSize() - 1);
+//  m_max_canvas = 0;
+//  for (int i = 0; i < MAX_CHART_CANVAS; i++) {
+//    m_chart_overlay[i] = -1;
+//  }
+//  m_context_menu_canvas_index = -1;
 
-  m_var = 0.0;
-  m_var_source = VARIATION_SOURCE_NONE;
-  m_bpos_set = false;
-  m_ownship.lat = nan("");
-  m_ownship.lon = nan("");
-  m_cursor_pos.lat = nan("");
-  m_cursor_pos.lon = nan("");
-  m_right_click_pos.lat = nan("");
-  m_right_click_pos.lon = nan("");
+//  m_var = 0.0;
+//  m_var_source = VARIATION_SOURCE_NONE;
+//  m_bpos_set = false;
+//  m_ownship.lat = nan("");
+//  m_ownship.lon = nan("");
+//  m_cursor_pos.lat = nan("");
+//  m_cursor_pos.lon = nan("");
+//  m_right_click_pos.lat = nan("");
+//  m_right_click_pos.lon = nan("");
 
-  m_guard_bogey_seen = false;
-  m_guard_bogey_confirmed = false;
-  m_sent_toolbar_button = TB_NONE;
-  m_toolbar_button = TB_NONE;
-  m_opengl_mode_changed = false;
-  m_notify_radar_window_viz = false;
-  m_notify_control_dialog = false;
+//  m_guard_bogey_seen = false;
+//  m_guard_bogey_confirmed = false;
+//  m_sent_toolbar_button = TB_NONE;
+//  m_toolbar_button = TB_NONE;
+//  m_opengl_mode_changed = false;
+//  m_notify_radar_window_viz = false;
+//  m_notify_control_dialog = false;
 
-  m_render_busy = false;
-  m_bogey_dialog = 0;
-  m_alarm_sound_timeout = 0;
-  m_guard_bogey_timeout = 0;
-  m_bpos_timestamp = now;
-  m_hdt = 0.0;
-  m_hdt_timeout = now + WATCHDOG_TIMEOUT;
-  m_hdm_timeout = now + WATCHDOG_TIMEOUT;
-  m_var_timeout = now + WATCHDOG_TIMEOUT;
-  m_cog_timeout = now;
-  m_cog = 0.;
-  m_COGAvg = 0.;
-  m_heading_source = HEADING_NONE;
-  m_vp_rotation = 0.;
-  m_arpa_max_range = BASE_ARPA_DIST;
-*/
+//  m_render_busy = false;
+//  m_bogey_dialog = 0;
+//  m_alarm_sound_timeout = 0;
+//  m_guard_bogey_timeout = 0;
+//  m_bpos_timestamp = now;
+//  m_hdt = 0.0;
+//  m_hdt_timeout = now + WATCHDOG_TIMEOUT;
+//  m_hdm_timeout = now + WATCHDOG_TIMEOUT;
+//  m_var_timeout = now + WATCHDOG_TIMEOUT;
+//  m_cog_timeout = now;
+//  m_cog = 0.;
+//  m_COGAvg = 0.;
+//  m_heading_source = HEADING_NONE;
+//  m_vp_rotation = 0.;
+//  m_arpa_max_range = BASE_ARPA_DIST;
+
   // Set default settings before we load config. Prevents random behavior on uninitalized behavior.
   // For instance, LOG_XXX messages before config is loaded.
   m_settings.verbose = 0;
   m_settings.overlay_transparency = DEFAULT_OVERLAY_TRANSPARENCY;
-  // g_verbose = 0;
+//  g_verbose = 0;
   m_settings.refreshrate = 1;
   m_settings.threshold_blue = 255;
   m_settings.threshold_red = 255;
@@ -265,125 +265,124 @@ int radar_pi::Init(void) {
   m_settings.enable_cog_heading = false;
   m_settings.AISatARPAoffset = 50;
   m_settings.range_units = RANGE_METRIC;
-  /*
-  m_ais_drawgl_broken = false;
+
+//  m_ais_drawgl_broken = false;
 
   // Get a pointer to the opencpn display canvas, to use as a parent for the UI
   // dialog
-  m_parent_window = GetOCPNCanvasWindow();
-  m_shareLocn = GetPluginDataDir("radar_pi") + wxFileName::GetPathSeparator() + _T("data") + wxFileName::GetPathSeparator();
+//  m_parent_window = GetOCPNCanvasWindow();
+//  m_shareLocn = GetPluginDataDir("radar_pi") + wxFileName::GetPathSeparator() + _T("data") + wxFileName::GetPathSeparator();
 
-  m_pMessageBox = new MessageBox;
-  m_pMessageBox->Create(m_parent_window, this);
-  LOG_INFO(wxT(PLUGIN_VERSION_WITH_DATE));
+//  m_pMessageBox = new MessageBox;
+//  m_pMessageBox->Create(m_parent_window, this);
+//  LOG_INFO(wxT(PLUGIN_VERSION_WITH_DATE));
 
-  m_navico_locator = 0;
-  m_raymarine_locator = 0;
+//  m_navico_locator = 0;
+//  m_raymarine_locator = 0;
 
   // Create objects before config, so config can set data in it
   // This does not start any threads or generate any UI.
-  for (size_t r = 0; r < RADARS; r++) {
-    m_radar[r] = new RadarInfo(this, r);
-    m_settings.show_radar[r] = true;
-    m_settings.dock_radar[r] = false;
-    m_settings.window_pos[r] = wxPoint(30 + 540 * r, 120);
+//  for (size_t r = 0; r < RADARS; r++) {
+//    m_radar[r] = new RadarInfo(this, r);
+//    m_settings.show_radar[r] = true;
+//    m_settings.dock_radar[r] = false;
+//    m_settings.window_pos[r] = wxPoint(30 + 540 * r, 120);
 
-    // #206: Discussion on whether at this point the contour length
-    // is really 6. The assert() proves this in debug (alpha) releases.
-    assert(m_radar[r]->m_min_contour_length == 6);
-  }
+   // #206: Discussion on whether at this point the contour length
+   // is really 6. The assert() proves this in debug (alpha) releases.
+//    assert(m_radar[r]->m_min_contour_length == 6);
+//  }
 
-  m_GPS_filter = new GPSKalmanFilter();
+//  m_GPS_filter = new GPSKalmanFilter();
 
   //    And load the configuration items
-  if (LoadConfig()) {
-    LOG_INFO(wxT("Configuration file values initialised"));
-    LOG_INFO(wxT("Log verbosity = %d. To modify, set VerboseLog to sum of:"), g_verbose);
-    LOG_INFO(wxT("VERBOSE  = %d"), LOGLEVEL_VERBOSE);
-    LOG_INFO(wxT("DIALOG   = %d"), LOGLEVEL_DIALOG);
-    LOG_INFO(wxT("TRANSMIT = %d"), LOGLEVEL_TRANSMIT);
-    LOG_INFO(wxT("RECEIVE  = %d"), LOGLEVEL_RECEIVE);
-    LOG_INFO(wxT("GUARD    = %d"), LOGLEVEL_GUARD);
-    LOG_INFO(wxT("ARPA     = %d"), LOGLEVEL_ARPA);
-    LOG_INFO(wxT("REPORTS  = %d"), LOGLEVEL_REPORTS);
-    LOG_VERBOSE(wxT("VERBOSE  log is enabled"));
-    LOG_DIALOG(wxT("DIALOG   log is enabled"));
-    LOG_TRANSMIT(wxT("TRANSMIT log is enabled"));
-    LOG_RECEIVE(wxT("RECEIVE  log is enabled"));
-    LOG_GUARD(wxT("GUARD    log is enabled"));
-    LOG_ARPA(wxT("ARPA     log is enabled"));
-    LOG_REPORTS(wxT("REPORTS  log is enabled"));
-  } else {
-    wxLogError(wxT("configuration file values initialisation failed"));
-    return 0;  // give up
-  }
+//  if (LoadConfig()) {
+//    LOG_INFO(wxT("Configuration file values initialised"));
+//    LOG_INFO(wxT("Log verbosity = %d. To modify, set VerboseLog to sum of:"), g_verbose);
+//    LOG_INFO(wxT("VERBOSE  = %d"), LOGLEVEL_VERBOSE);
+//    LOG_INFO(wxT("DIALOG   = %d"), LOGLEVEL_DIALOG);
+//    LOG_INFO(wxT("TRANSMIT = %d"), LOGLEVEL_TRANSMIT);
+//    LOG_INFO(wxT("RECEIVE  = %d"), LOGLEVEL_RECEIVE);
+//    LOG_INFO(wxT("GUARD    = %d"), LOGLEVEL_GUARD);
+//    LOG_INFO(wxT("ARPA     = %d"), LOGLEVEL_ARPA);
+//    LOG_INFO(wxT("REPORTS  = %d"), LOGLEVEL_REPORTS);
+//    LOG_VERBOSE(wxT("VERBOSE  log is enabled"));
+//    LOG_DIALOG(wxT("DIALOG   log is enabled"));
+//    LOG_TRANSMIT(wxT("TRANSMIT log is enabled"));
+//    LOG_RECEIVE(wxT("RECEIVE  log is enabled"));
+//    LOG_GUARD(wxT("GUARD    log is enabled"));
+//    LOG_ARPA(wxT("ARPA     log is enabled"));
+//    LOG_REPORTS(wxT("REPORTS  log is enabled"));
+//  } else {
+//    wxLogError(wxT("configuration file values initialisation failed"));
+//    return 0;  // give up
+//  }
   //    This PlugIn needs a toolbar icon
 
-  wxString svg_normal = m_shareLocn + wxT("radar_standby.svg");
-  wxString svg_rollover = m_shareLocn + wxT("radar_searching.svg");
-  wxString svg_toggled = m_shareLocn + wxT("radar_active.svg");
-  m_tool_id = InsertPlugInToolSVG(wxT("Radar"), svg_normal, svg_rollover, svg_toggled, wxITEM_NORMAL, wxT("Radar"),
-                                  _("Radar plugin with support for multiple radars"), NULL, RADAR_TOOL_POSITION, 0, this);
+//  wxString svg_normal = m_shareLocn + wxT("radar_standby.svg");
+//  wxString svg_rollover = m_shareLocn + wxT("radar_searching.svg");
+//  wxString svg_toggled = m_shareLocn + wxT("radar_active.svg");
+//  m_tool_id = InsertPlugInToolSVG(wxT("Radar"), svg_normal, svg_rollover, svg_toggled, wxITEM_NORMAL, wxT("Radar"),
+//                                  _("Radar plugin with support for multiple radars"), NULL, RADAR_TOOL_POSITION, 0, this);
 
   // CacheSetToolbarToolBitmaps(BM_ID_RED, BM_ID_BLANK);
   // Now that the settings are made we can initialize the RadarInfos
-  for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
-    m_radar[r]->Init();
-    StartRadarLocators(r);
-  }
+//  for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
+//    m_radar[r]->Init();
+//    StartRadarLocators(r);
+//  }
   // and get rid of any radars we're not using
-  for (size_t r = M_SETTINGS.radar_count; r < RADARS; r++) {
-    if (m_radar[r]) delete m_radar[r];
-    m_radar[r] = 0;
-  }
+//  for (size_t r = M_SETTINGS.radar_count; r < RADARS; r++) {
+//    if (m_radar[r]) delete m_radar[r];
+//    m_radar[r] = 0;
+//  }
 
-  for (size_t r = 0; r < MAX_CHART_CANVAS; r++) {
-    m_draw_time_overlay_ms[r] = 0;
-  }
+//  for (size_t r = 0; r < MAX_CHART_CANVAS; r++) {
+//    m_draw_time_overlay_ms[r] = 0;
+//  }
 
-  m_initialized = true;
-  SetRadarWindowViz();
-  TimedControlUpdate();
+//  m_initialized = true;
+//  SetRadarWindowViz();
+//  TimedControlUpdate();
 
   //    In order to avoid an ASSERT on msw debug builds,
   //    we need to create a dummy menu to act as a surrogate parent of the created MenuItems
   //    The Items will be re-parented when added to the real context meenu
 
-  wxMenu dummy_menu;
+//  wxMenu dummy_menu;
 
-  wxMenuItem *mi1 = new wxMenuItem(&dummy_menu, -1, _("Show radar"));
-  wxMenuItem *mi2 = new wxMenuItem(&dummy_menu, -1, _("Hide radar"));
+//  wxMenuItem *mi1 = new wxMenuItem(&dummy_menu, -1, _("Show radar"));
+//  wxMenuItem *mi2 = new wxMenuItem(&dummy_menu, -1, _("Hide radar"));
 
-  wxMenuItem *mi4 = new wxMenuItem(&dummy_menu, -1, _("Acquire radar target"));
-  wxMenuItem *mi5 = new wxMenuItem(&dummy_menu, -1, _("Delete radar target"));
-  wxMenuItem *mi6 = new wxMenuItem(&dummy_menu, -1, _("Delete all radar targets"));
+//  wxMenuItem *mi4 = new wxMenuItem(&dummy_menu, -1, _("Acquire radar target"));
+//  wxMenuItem *mi5 = new wxMenuItem(&dummy_menu, -1, _("Delete radar target"));
+//  wxMenuItem *mi6 = new wxMenuItem(&dummy_menu, -1, _("Delete all radar targets"));
 
-#ifdef __WXMSW__
-  wxFont *qFont = OCPNGetFont(_("Menu"), 10);
-  mi1->SetFont(*qFont);
-  mi2->SetFont(*qFont);
-  mi4->SetFont(*qFont);
-  mi5->SetFont(*qFont);
-  mi6->SetFont(*qFont);
-#endif
+//#ifdef __WXMSW__
+//  wxFont *qFont = OCPNGetFont(_("Menu"), 10);
+//  mi1->SetFont(*qFont);
+//  mi2->SetFont(*qFont);
+//  mi4->SetFont(*qFont);
+//  mi5->SetFont(*qFont);
+//  mi6->SetFont(*qFont);
+//#endif
 
-  m_context_menu_show_id = AddCanvasContextMenuItem(mi1, this);
-  m_context_menu_hide_id = AddCanvasContextMenuItem(mi2, this);
-  m_context_menu_acquire_radar_target = AddCanvasContextMenuItem(mi4, this);
-  m_context_menu_delete_radar_target = AddCanvasContextMenuItem(mi5, this);
-  m_context_menu_delete_all_radar_targets = AddCanvasContextMenuItem(mi6, this);
-  m_context_menu_show = true;
-  m_context_menu_arpa = false;
-  SetCanvasContextMenuItemViz(m_context_menu_show_id, false);
+//  m_context_menu_show_id = AddCanvasContextMenuItem(mi1, this);
+//  m_context_menu_hide_id = AddCanvasContextMenuItem(mi2, this);
+//  m_context_menu_acquire_radar_target = AddCanvasContextMenuItem(mi4, this);
+//  m_context_menu_delete_radar_target = AddCanvasContextMenuItem(mi5, this);
+//  m_context_menu_delete_all_radar_targets = AddCanvasContextMenuItem(mi6, this);
+//  m_context_menu_show = true;
+//  m_context_menu_arpa = false;
+//  SetCanvasContextMenuItemViz(m_context_menu_show_id, false);
 
-  LOG_VERBOSE(wxT("Initialized plugin transmit=%d/%d "), m_settings.show_radar[0], m_settings.show_radar[1]);
+//  LOG_VERBOSE(wxT("Initialized plugin transmit=%d/%d "), m_settings.show_radar[0], m_settings.show_radar[1]);
 
-  m_notify_time_ms = 0;
-  m_timer = new wxTimer(this, TIMER_ID);
-  m_update_timer = new wxTimer(this, UPDATE_TIMER_ID);
-  m_update_timer->Start(UPDATE_INTERVAL);
+//  m_notify_time_ms = 0;
+//  m_timer = new wxTimer(this, TIMER_ID);
+//  m_update_timer = new wxTimer(this, UPDATE_TIMER_ID);
+//  m_update_timer->Start(UPDATE_INTERVAL);
 
-*/
   return 0; // PLUGIN_OPTIONS;
 }
 
