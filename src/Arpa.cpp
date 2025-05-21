@@ -1072,6 +1072,7 @@ void ArpaTarget::PassARPAtoOCPN(Polar* pol, OCPN_target_status status) {
     checksum ^= *p;
   }
   nmea.Printf(wxT("$%s*%02X\r\n"), sentence, (unsigned)checksum);
+  std::cout << "ARPA: " << nmea << "\n";
 //  PushNMEABuffer(nmea);
 }
 

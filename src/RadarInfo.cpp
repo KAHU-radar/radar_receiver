@@ -140,9 +140,9 @@ RadarInfo::RadarInfo(radar_pi *pi, int radar) {
     m_overlay_canvas[i].Update(0);
   }
 
-//  for (size_t z = 0; z < GUARD_ZONES; z++) {
-//    m_guard_zone[z] = new GuardZone(m_pi, this, z);
-//  }
+  for (size_t z = 0; z < GUARD_ZONES; z++) {
+    m_guard_zone[z] = new GuardZone(m_pi, this, z);
+  }
   process_radar_spoke_fn = 0;
 }
 
@@ -251,22 +251,22 @@ RadarInfo::~RadarInfo() {
     delete m_control;
     m_control = 0;
   }
-  /*
   if (m_arpa) {
     delete m_arpa;
     m_arpa = 0;
   }
+  /*
   if (m_trails) {
     delete m_trails;
     m_trails = 0;
   }
+  */
   for (size_t z = 0; z < GUARD_ZONES; z++) {
     if (m_guard_zone[z]) {
       delete m_guard_zone[z];
       m_guard_zone[z] = 0;
     }
   }
-  */
 
   if (m_history) {
     for (size_t i = 0; i < m_spokes; i++) {
@@ -327,11 +327,11 @@ bool RadarInfo::Init() {
       return false;
     }
   }
+  */
   if (!m_arpa) {
     m_arpa = new Arpa(m_pi, this);
   }
-  m_trails = new TrailBuffer(this, m_spokes, m_spoke_len_max);
-  */
+//  m_trails = new TrailBuffer(this, m_spokes, m_spoke_len_max);
   ComputeTargetTrails();
   UpdateControlState(true);
   if (!m_receive) {
@@ -386,6 +386,7 @@ void RadarInfo::SetName(wxString name) {
 }
 
 void RadarInfo::ComputeColourMap() {
+ /*
   int doppler_states = m_doppler.GetValue();
 
   LOG_VERBOSE(wxT("%s computing colour map, doppler=%d"), m_name.c_str(), doppler_states);
@@ -434,6 +435,7 @@ void RadarInfo::ComputeColourMap() {
   m_colour_map_rgb[BLOB_STRONG] = M_SETTINGS.strong_colour;
   m_colour_map_rgb[BLOB_INTERMEDIATE] = M_SETTINGS.intermediate_colour;
   m_colour_map_rgb[BLOB_WEAK] = M_SETTINGS.weak_colour;
+  */
 }
 
 void RadarInfo::ResetSpokes() {
@@ -466,11 +468,11 @@ void RadarInfo::ResetSpokes() {
       m_draw_overlay.draw->ProcessRadarSpoke(0, r, zap, m_spoke_len_max, pos);
     }
   }
+*/
   for (size_t z = 0; z < GUARD_ZONES; z++) {
     // Zap them anyway just to be sure
     m_guard_zone[z]->ResetBogeys();
   }
-*/
 }
 
 void RadarInfo::CalculateRotationSpeed(SpokeBearing angle) {
@@ -535,11 +537,9 @@ void RadarInfo::ProcessRadarSpoke(SpokeBearing angle, SpokeBearing bearing, uint
                 pixels_per_meter, range_meters);
     m_pixels_per_meter = pixels_per_meter;
     ResetSpokes();
-    /*
     if (m_arpa) {
       m_arpa->ClearContours();
     }
-    */
   }
 
   orientation = GetOrientation();
@@ -576,13 +576,11 @@ void RadarInfo::ProcessRadarSpoke(SpokeBearing angle, SpokeBearing bearing, uint
     }
   }
 
-  /*
   for (size_t z = 0; z < GUARD_ZONES; z++) {
     if (m_guard_zone[z]->m_alarm_on) {
       m_guard_zone[z]->ProcessSpoke(angle, data, m_history[bearing].line, len);
     }
   }
-  */
   
   size_t trail_len = len;
   if (m_pi->m_settings.show_extreme_range) {
@@ -947,11 +945,9 @@ void RadarInfo::UpdateControlState(bool all) {
 void RadarInfo::ResetRadarImage() {
   ResetSpokes();
   ClearTrails();
-  /*
   if (m_arpa) {
     m_arpa->ClearContours();
   }
-  */
 }
 
 /**
@@ -1225,7 +1221,6 @@ wxString RadarInfo::GetCanvasTextBottomLeft() {
 
   LOG_VERBOSE(wxT("%s BottomLeft = %s"), m_name.c_str(), s.c_str());
 
-  /*
   for (int z = 0; z < GUARD_ZONES; z++) {
     int bogeys = m_guard_zone[z]->GetBogeyCount();
     if (bogeys > 0 || (m_pi->m_guard_bogey_confirmed && bogeys == 0)) {
@@ -1238,7 +1233,6 @@ wxString RadarInfo::GetCanvasTextBottomLeft() {
       }
     }
   }
-  */
   
   if (m_state.GetValue() == RADAR_TRANSMIT) {
     double distance = 0.0, bearing = nan("");

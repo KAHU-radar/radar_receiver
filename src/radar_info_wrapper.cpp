@@ -1,5 +1,6 @@
 #include "radar_info_wrapper.h"
 #include "radar_pi.h"
+#include "GuardZone.h"
 #include "pi_common.h"
 #include <string.h>
 
@@ -121,12 +122,6 @@ RadarInfoWrapper::RadarInfoWrapper(const Napi::CallbackInfo& info) : Napi::Objec
     radar = new PLUGIN_NAMESPACE::radar_pi(NULL);
     radar->Init();
     radar->m_radar[0] = new PLUGIN_NAMESPACE::RadarInfo(radar, 0);
-    timed_update_thread = new TimedUpdateThread(radar);
-    if (timed_update_thread->Run() != wxTHREAD_NO_ERROR) {
-        wxLogError(wxT("unable to start timed update thread"));
-    } else {
-        LOG_INFO(wxT("timed update thread started"));
-    }
 
     process_radar_spoke_fn = NULL;
     if ((info.Length() > 1) && info[1].IsFunction()) {
@@ -199,7 +194,13 @@ RadarInfoWrapper::RadarInfoWrapper(const Napi::CallbackInfo& info) : Napi::Objec
     radar->m_settings.radar_count = 1;
     radar->m_radar[0]->m_radar_type = (PLUGIN_NAMESPACE::RadarType) (info[0].As<Napi::Number>().Int32Value());  // modify type of existing radar ?
     radar->StartRadarLocators(0);
-    radar->m_radar[0]->Init();
+    radar->m_radar[0]->Init();    
+    timed_update_thread = new TimedUpdateThread(radar);
+    if (timed_update_thread->Run() != wxTHREAD_NO_ERROR) {
+        wxLogError(wxT("unable to start timed update thread"));
+    } else {
+        LOG_INFO(wxT("timed update thread started"));
+    }
 }
 
 
@@ -362,6 +363,70 @@ Napi::Value RadarInfoWrapper::GetProperties(const Napi::CallbackInfo& info) {
     return result;
 }
 
+Napi::Value RadarInfoWrapper::GetGuardZones(const Napi::CallbackInfo& info) {
+    PLUGIN_NAMESPACE::RadarInfo *ri = radar->m_radar[0];
+    Napi::Env env = info.Env();
+    Napi::Array result = Napi::Array::New(env, GUARD_ZONES);
+    for (uint32_t i = 0; i < GUARD_ZONES; ++i) {
+        Napi::Object def = Napi::Object::New(env);    
+        def.Set("start_bearing", Napi::Number::New(env, ri->m_guard_zone[i]->m_start_bearing));
+        def.Set("end_bearing", Napi::Number::New(env, ri->m_guard_zone[i]->m_start_bearing));
+        def.Set("inner_range", Napi::Number::New(env, ri->m_guard_zone[i]->m_inner_range));
+        def.Set("outer_range", Napi::Number::New(env, ri->m_guard_zone[i]->m_outer_range));
+        def.Set("alarm_on", Napi::Boolean::New(env, ri->m_guard_zone[i]->m_alarm_on));
+        def.Set("arpa_on", Napi::Boolean::New(env, ri->m_guard_zone[i]->m_arpa_on));
+        def.Set("type", Napi::String::New(env, (ri->m_guard_zone[i]->m_type == PLUGIN_NAMESPACE::GZ_ARC) ? "GZ_ARC" : "GZ_CIRCLE"));
+        result.Set(i, def);
+    }
+    return result;
+}
+
+Napi::Value RadarInfoWrapper::SetGuardZones(const Napi::CallbackInfo& info) {
+    PLUGIN_NAMESPACE::RadarInfo *ri = radar->m_radar[0];
+    Napi::Env env = info.Env();
+    if (info.Length() < 1 || !info[0].IsArray()) {
+        Napi::TypeError::New(env, "Expected an array of guard zone definitions").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
+    Napi::Array inputArray = info[0].As<Napi::Array>();
+    uint32_t length = inputArray.Length();
+
+    for (uint32_t i = 0; (i < length) && (i < GUARD_ZONES); ++i) {        
+        Napi::Value element = inputArray[i];
+        if (!element.IsObject()) {
+          Napi::TypeError::New(env, "Guard zone definitions must be objects").ThrowAsJavaScriptException();
+          return env.Null();
+        }
+
+        Napi::Object guard_zone_def = element.As<Napi::Object>();
+        ri->m_guard_zone[i]->m_start_bearing = (guard_zone_def.Has("start_bearing")
+                                                ? guard_zone_def.Get("start_bearing").As<Napi::Number>().Int32Value()
+                                                : 0);
+        ri->m_guard_zone[i]->m_end_bearing = (guard_zone_def.Has("end_bearing")
+                                              ? guard_zone_def.Get("end_bearing").As<Napi::Number>().Int32Value()
+                                              : 0);
+        ri->m_guard_zone[i]->m_inner_range = (guard_zone_def.Has("inner_range")
+                                              ? guard_zone_def.Get("inner_range").As<Napi::Number>().Int32Value()
+                                              : 0);
+        ri->m_guard_zone[i]->m_outer_range = (guard_zone_def.Has("outer_range")
+                                              ? guard_zone_def.Get("outer_range").As<Napi::Number>().Int32Value()
+                                              : 0);
+        ri->m_guard_zone[i]->m_alarm_on = (guard_zone_def.Has("alarm_on")
+                                           ? guard_zone_def.Get("alarm_on").As<Napi::Boolean>().Value()
+                                           : 0);
+        ri->m_guard_zone[i]->m_arpa_on = (guard_zone_def.Has("arpa_on")
+                                           ? guard_zone_def.Get("arpa_on").As<Napi::Boolean>().Value()
+                                           : 0);
+
+        ri->m_guard_zone[i]->m_type = PLUGIN_NAMESPACE::GZ_CIRCLE;
+        if (guard_zone_def.Has("type") && (guard_zone_def.Get("type").As<Napi::String>().Utf8Value() == "GZ_ARC")) {
+            ri->m_guard_zone[i]->m_type = PLUGIN_NAMESPACE::GZ_ARC;
+        }
+    }
+    return env.Null();
+}
+ 
 Napi::Function RadarInfoWrapper::GetClass(Napi::Env env) {
     return DefineClass(env, "RadarInfo", {
       //InstanceMethod("init", &RadarInfoWrapper::Init),
@@ -371,6 +436,8 @@ Napi::Function RadarInfoWrapper::GetClass(Napi::Env env) {
       InstanceMethod("setProperty", &RadarInfoWrapper::SetProperty),
       InstanceMethod("getProperty", &RadarInfoWrapper::GetProperty),
       InstanceMethod("getPropertyType", &RadarInfoWrapper::GetPropertyType),
-      InstanceMethod("getProperties", &RadarInfoWrapper::GetProperties)
+      InstanceMethod("getProperties", &RadarInfoWrapper::GetProperties),
+      InstanceMethod("getGuardZones", &RadarInfoWrapper::GetGuardZones),
+      InstanceMethod("setGuardZones", &RadarInfoWrapper::SetGuardZones)
     });
 }

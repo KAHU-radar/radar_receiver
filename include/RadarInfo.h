@@ -342,8 +342,8 @@ public:
 
     // Speedup lookup tables of color to r,g,b, set dependent on
     // m_settings.display_option.
-    PixelColour m_colour_map_rgb[BLOB_COLOURS];
-    BlobColour m_colour_map[UINT8_MAX + 1];
+//    PixelColour m_colour_map_rgb[BLOB_COLOURS];
+//    BlobColour m_colour_map[UINT8_MAX + 1];
 
     // Speedup PolarToCartesian lookup (angle,radius) -> (x, y)
     PolarToCartesianLookup* m_polar_lookup;

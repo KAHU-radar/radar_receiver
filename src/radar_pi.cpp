@@ -151,11 +151,11 @@ END_EVENT_TABLE()
 
 radar_pi::radar_pi(void *ppimgr) /* : opencpn_plugin_116(ppimgr), m_raymarine_locator(0) */ {
   m_boot_time = wxGetUTCTimeMillis();
-  /*
   m_initialized = false;
-  m_predicted_position_initialised = false;
+//  m_predicted_position_initialised = false;
 
   M_SETTINGS = {0};
+  /*
 
   // Create the PlugIn icons
   initialize_images();
@@ -258,6 +258,7 @@ int radar_pi::Init(void) {
 
   // Set default settings before we load config. Prevents random behavior on uninitalized behavior.
   // For instance, LOG_XXX messages before config is loaded.
+  m_settings.show = 1; // Without this guard zones are inactive
   m_settings.verbose = 0;
   m_settings.overlay_transparency = DEFAULT_OVERLAY_TRANSPARENCY;
 //  g_verbose = 0;
@@ -280,8 +281,8 @@ int radar_pi::Init(void) {
 //  m_pMessageBox->Create(m_parent_window, this);
 //  LOG_INFO(wxT(PLUGIN_VERSION_WITH_DATE));
 
-//  m_navico_locator = 0;
-//  m_raymarine_locator = 0;
+  m_navico_locator = 0;
+  m_raymarine_locator = 0;
 
   // Create objects before config, so config can set data in it
   // This does not start any threads or generate any UI.
@@ -344,7 +345,7 @@ int radar_pi::Init(void) {
 //    m_draw_time_overlay_ms[r] = 0;
 //  }
 
-//  m_initialized = true;
+  m_initialized = true;
 //  SetRadarWindowViz();
 //  TimedControlUpdate();
 

@@ -11,6 +11,7 @@
         "src/ControlsDialog.cpp",
         "src/Arpa.cpp",
 
+        "deps/radar_pi/src/GuardZone.cpp",
         "deps/radar_pi/src/Kalman.cpp",
         "deps/radar_pi/src/RadarFactory.cpp",
         "deps/radar_pi/src/socketutil.cpp",

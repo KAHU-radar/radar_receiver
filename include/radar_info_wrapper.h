@@ -35,6 +35,8 @@ public:
     Napi::Value GetPropertyType(const Napi::CallbackInfo& info);
     Napi::Value GetProperties(const Napi::CallbackInfo& info);
     ssize_t GetPropertyIndexByItem(PLUGIN_NAMESPACE::RadarControlItem *item);
+    Napi::Value GetGuardZones(const Napi::CallbackInfo& info);
+    Napi::Value SetGuardZones(const Napi::CallbackInfo& info);
 
 private:
     PLUGIN_NAMESPACE::radar_pi* radar;
