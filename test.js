@@ -43,6 +43,13 @@ async function ensureFileInitialized() {
           ThresholdBlue: '33',
           ThresholdGreen: '100',
           ThresholdRed: '200',
+          Radar0Zone0StartBearing: '0',
+          Radar0Zone0EndBearing: '360',
+          Radar0Zone0OuterRange: '100000',
+          Radar0Zone0InnerRange: '0',
+          Radar0Zone0Type: '1',
+          Radar0Zone0AlarmOn: '0',
+          Radar0Zone0ArpaOn: '0',
         }
       }
     },
@@ -73,26 +80,6 @@ async function ensureFileInitialized() {
       }
     }
   });
-  ri.setGuardZones([
-    {
-      start_bearing: 0,
-      end_bearing: 360,
-      inner_range: 0,
-      outer_range: 100000,
-      alarm_on: false,
-      arpa_on: true,
-      type: 'GZ_CIRCLE'
-    },
-    {
-      start_bearing: 0,
-      end_bearing: 0,
-      inner_range: 0,
-      outer_range: 0,
-      alarm_on: false,
-      arpa_on: false,
-      type: 'GZ_CIRCLE'
-    }
-  ]);
   //console.log("SETTINGS", ri.getSettings());
 //console.log("Radar type:", ri.getType());
 

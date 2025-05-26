@@ -1214,21 +1214,6 @@ void radar_pi::TimedUpdate(wxTimerEvent &event) {
   if (!m_initialized) {
     return;
   }
-
-  int found = 0;
-  if (m_radar[0]->m_history) {
-    for (int i = 0; i < 2048; i++) {
-      for (int j = 0; j < 1024; j++) {
-       found += m_radar[0]->m_history[i].line[j];
-      }
-    }
-  }
-
-  if (found > 0) {
-   std::cout << "FOUND DATA\n";
-   dump_frame(m_radar[0], m_frame_counter++);
-  }
-  return;
   
   //// for testing only, simple trick to get position and heading
   // wxString nmea;
