@@ -49,7 +49,7 @@ async function ensureFileInitialized() {
           Radar0Zone0InnerRange: '0',
           Radar0Zone0Type: '1',
           Radar0Zone0AlarmOn: '0',
-          Radar0Zone0ArpaOn: '0',
+          Radar0Zone0ArpaOn: '1',
         }
       }
     },
@@ -80,6 +80,7 @@ async function ensureFileInitialized() {
       }
     }
   });
+  ri.setPosition({lat: 0.0, lon: 0.0});
   //console.log("SETTINGS", ri.getSettings());
 //console.log("Radar type:", ri.getType());
 

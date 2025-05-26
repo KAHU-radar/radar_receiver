@@ -840,7 +840,9 @@ public:
     // Cursor position. Used to show position in radar window
     GeoPosition m_cursor_pos;
     GeoPosition m_right_click_pos;
+*/
     GeoPosition m_ownship;
+/*
     GeoPosition m_ownship_old;
     ExtendedPosition m_GPS_position;
 

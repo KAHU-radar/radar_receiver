@@ -225,9 +225,9 @@ int radar_pi::Init(void) {
 
   m_var = 0.0;
   m_var_source = VARIATION_SOURCE_NONE;
-//  m_bpos_set = false;
-//  m_ownship.lat = nan("");
-//  m_ownship.lon = nan("");
+  m_bpos_set = false;
+  m_ownship.lat = nan("");
+  m_ownship.lon = nan("");
 //  m_cursor_pos.lat = nan("");
 //  m_cursor_pos.lon = nan("");
 //  m_right_click_pos.lat = nan("");

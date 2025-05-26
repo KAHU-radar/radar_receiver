@@ -40,6 +40,7 @@ public:
     Napi::Value SetGuardZones(const Napi::CallbackInfo& info);
     Napi::Value GetSettings(const Napi::CallbackInfo& info);
     Napi::Value SetSettings(const Napi::CallbackInfo& info);
+    Napi::Value SetPosition(const Napi::CallbackInfo& info);
 
 private:
     PLUGIN_NAMESPACE::radar_pi* radar;

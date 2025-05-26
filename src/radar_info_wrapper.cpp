@@ -460,6 +460,31 @@ Napi::Value RadarInfoWrapper::SetSettings(const Napi::CallbackInfo& info) {
     radar->LoadConfig();
 }
 
+Napi::Value RadarInfoWrapper::SetPosition(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    
+    if (info.Length() < 1 || !info[0].IsObject()) {
+        Napi::TypeError::New(env, "Expected coordinate object {lat, lon}").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+    Napi::Object args = info[0].As<Napi::Object>();
+    if (!args.Has("lat")) {
+       radar->m_bpos_set = false;
+       return env.Null();
+    }
+    
+    radar->m_ownship.lat = args.Get("lat").As<Napi::Number>().FloatValue();
+    radar->m_ownship.lon = args.Get("lon").As<Napi::Number>().FloatValue();
+    radar->m_bpos_set = true;
+    
+    for (size_t r = 0; r < radar->m_settings.radar_count; r++) {
+      wxCriticalSectionLocker lock(radar->m_radar[r]->m_exclusive);
+      if (radar->m_radar[r]) {
+        radar->m_radar[r]->SetRadarPosition(radar->m_ownship, radar->m_hdt);
+      }
+    }
+    return env.Null();
+}
 
 Napi::Function RadarInfoWrapper::GetClass(Napi::Env env) {
     return DefineClass(env, "RadarInfo", {
@@ -474,6 +499,7 @@ Napi::Function RadarInfoWrapper::GetClass(Napi::Env env) {
       InstanceMethod("getGuardZones", &RadarInfoWrapper::GetGuardZones),
       InstanceMethod("setGuardZones", &RadarInfoWrapper::SetGuardZones),
       InstanceMethod("getSettings", &RadarInfoWrapper::GetSettings),
-      InstanceMethod("setSettings", &RadarInfoWrapper::SetSettings)
+      InstanceMethod("setSettings", &RadarInfoWrapper::SetSettings),
+      InstanceMethod("setPosition", &RadarInfoWrapper::SetPosition)
     });
 }
