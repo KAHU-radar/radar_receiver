@@ -685,6 +685,7 @@ void RadarInfo::RequestRadarState(RadarState state) {
       time_t now = time(0);
 
       if (state == RADAR_TRANSMIT) {
+       std::cout << "BEGIN TRANSMIT\n";
         m_control->RadarTxOn();
         // Refresh radar immediately so that we generate draw mechanisms
         /*

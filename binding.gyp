@@ -5,6 +5,7 @@
       "sources": [
         "src/addon.cpp",
         "src/radar_info_wrapper.cpp",
+        "src/settings.cpp",
 
         "src/radar_pi.cpp",
         "src/RadarInfo.cpp",

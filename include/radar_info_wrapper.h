@@ -5,6 +5,7 @@
 #include "radar_pi.h"
 #include "RadarInfo.h"
 #include "RadarControlItem.h"
+#include "settings.h"
 
 class TimedUpdateThread : public wxThread {
 public:
@@ -37,9 +38,12 @@ public:
     ssize_t GetPropertyIndexByItem(PLUGIN_NAMESPACE::RadarControlItem *item);
     Napi::Value GetGuardZones(const Napi::CallbackInfo& info);
     Napi::Value SetGuardZones(const Napi::CallbackInfo& info);
+    Napi::Value GetSettings(const Napi::CallbackInfo& info);
+    Napi::Value SetSettings(const Napi::CallbackInfo& info);
 
 private:
     PLUGIN_NAMESPACE::radar_pi* radar;
+    Settings* settings;
     TimedUpdateThread* timed_update_thread;
     Napi::ThreadSafeFunction process_radar_spoke_fn;
     Napi::ThreadSafeFunction notify_fn;

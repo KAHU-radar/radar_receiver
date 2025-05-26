@@ -621,15 +621,15 @@ public:
     void logBinaryData(const wxString& what, const uint8_t* data, int size);
     void StartRadarLocators(size_t r);
     void StopRadarLocators();
- /*
 
     void UpdateAllControlStates(bool all);
+ /*
 
     bool IsRadarOnScreen(int radar);
-
+ */
     bool LoadConfig();
     bool SaveConfig();
-
+/*
     long GetRangeMeters();
     long GetOptimalRangeMeters();
 
@@ -723,10 +723,12 @@ public:
 
     bool m_ais_drawgl_broken;
 */
+//private:
  /*
-private:
     void RadarSendState(void);
+ */
     void UpdateState(void);
+ /*
     void UpdateHeadingPositionState(void);
     void DoTick(void);
     void Select_Clutter(int req_clutter_index);
@@ -738,8 +740,8 @@ private:
     void SetRadarWindowViz(bool reparent = false);
     void UpdateCOGAvg(double cog);
     void OnTimerNotify(wxTimerEvent& event);
-    void TimedControlUpdate();
  */
+    void TimedControlUpdate();
     void TimedUpdate(wxTimerEvent& event);
  /*
     void ScheduleWindowRefresh();
@@ -780,10 +782,10 @@ public:
     */
     double m_var; // local magnetic variation, in degrees
     VariationSource m_var_source;
- /*
-    time_t m_var_timeout;
+//    time_t m_var_timeout;
 
     wxFileConfig* m_pconfig;
+ /*
     int m_context_menu_control_id[RADARS];
     int m_context_menu_show_id;
     int m_context_menu_hide_id;
@@ -866,6 +868,7 @@ private:
     wxTimer* m_update_timer;
  */
 //    DECLARE_EVENT_TABLE()
+ int m_frame_counter;
 };
 
 PLUGIN_END_NAMESPACE

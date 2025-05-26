@@ -55,6 +55,7 @@ void* TimedUpdateThread::Entry(void) {
     m_is_shutdown = false;
     while (!m_shutdown) {
         m_pi->TimedUpdate(dummy);
+        m_pi->TimedControlUpdate(); // Maybe call more often?
         wxMilliSleep(500);
     }
     return 0;
@@ -114,20 +115,33 @@ Napi::Value RadarControlInfoItemToNode(Napi::Env env, PLUGIN_NAMESPACE::ControlI
 RadarInfoWrapper::RadarInfoWrapper(const Napi::CallbackInfo& info) : Napi::ObjectWrap<RadarInfoWrapper>(info) {
     Napi::Env env = info.Env();
     
-    if (info.Length() < 1 || !info[0].IsNumber()) {
+    if (info.Length() < 1 || !info[0].IsObject()) {
         Napi::TypeError::New(env, "Expected radar type number").ThrowAsJavaScriptException();
         return;
     }
+    Napi::Object args = info[0].As<Napi::Object>();
 
+    // if (!args.Has("type") || !args.Get("type").IsNumber()) {
+    //     Napi::TypeError::New(env, "Expected args.type to hold a radar type number").ThrowAsJavaScriptException();
+    //     return;
+    // }
+
+    settings = new Settings();
+    if (args.Has("settings") && args.Get("settings").IsObject()) {
+        Napi::Object settingsObj = args.Get("settings").As<Napi::Object>();
+        settings->LoadFromJson(settingsObj);
+    }
+    
     radar = new PLUGIN_NAMESPACE::radar_pi(NULL);
+    radar->m_pconfig = settings->config;
     radar->Init();
-    radar->m_radar[0] = new PLUGIN_NAMESPACE::RadarInfo(radar, 0);
+    //radar->m_radar[0] = new PLUGIN_NAMESPACE::RadarInfo(radar, 0);
 
     process_radar_spoke_fn = NULL;
-    if ((info.Length() > 1) && info[1].IsFunction()) {
+    if (args.Has("spoke_cb") && args.Get("spoke_cb").IsFunction()) {
         process_radar_spoke_fn = Napi::ThreadSafeFunction::New(
             env,
-            info[1].As<Napi::Function>(),
+            args.Get("spoke_cb").As<Napi::Function>(),
             "process_radar_spoke_fn",
             0,                            // Unlimited queue
             1                             // Only one thread will use this initially
@@ -163,10 +177,10 @@ RadarInfoWrapper::RadarInfoWrapper(const Napi::CallbackInfo& info) : Napi::Objec
     }
 
     notify_fn = NULL;
-    if ((info.Length() > 2) && info[2].IsFunction()) {
+    if (args.Has("property_cb") && args.Get("property_cb").IsFunction()) {
         notify_fn = Napi::ThreadSafeFunction::New(
             env,
-            info[2].As<Napi::Function>(),
+            args.Get("property_cb").As<Napi::Function>(),
             "notify_fn",
             0,                            // Unlimited queue
             1                             // Only one thread will use this initially
@@ -190,11 +204,10 @@ RadarInfoWrapper::RadarInfoWrapper(const Napi::CallbackInfo& info) : Napi::Objec
                }));
     }
 
-    
-    radar->m_settings.radar_count = 1;
-    radar->m_radar[0]->m_radar_type = (PLUGIN_NAMESPACE::RadarType) (info[0].As<Napi::Number>().Int32Value());  // modify type of existing radar ?
-    radar->StartRadarLocators(0);
-    radar->m_radar[0]->Init();    
+    //radar->m_settings.radar_count = 1;
+    //radar->m_radar[0]->m_radar_type = (PLUGIN_NAMESPACE::RadarType) (args.Get("type").As<Napi::Number>().Int32Value());  // modify type of existing radar ?
+    //radar->StartRadarLocators(0);
+    //radar->m_radar[0]->Init();
     timed_update_thread = new TimedUpdateThread(radar);
     if (timed_update_thread->Run() != wxTHREAD_NO_ERROR) {
         wxLogError(wxT("unable to start timed update thread"));
@@ -215,6 +228,8 @@ void RadarInfoWrapper::Shutdown(const Napi::CallbackInfo& info) {
     radar->DeInit();
     if (process_radar_spoke_fn) process_radar_spoke_fn.Release();
     if (notify_fn) notify_fn.Release();
+    delete settings;
+    settings = 0;
 }
 
 void RadarInfoWrapper::SetTransmit(const Napi::CallbackInfo& info) {
@@ -426,7 +441,26 @@ Napi::Value RadarInfoWrapper::SetGuardZones(const Napi::CallbackInfo& info) {
     }
     return env.Null();
 }
- 
+
+Napi::Value RadarInfoWrapper::GetSettings(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    radar->SaveConfig();
+    return settings->DumpToJson(env);
+}
+
+Napi::Value RadarInfoWrapper::SetSettings(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    
+    if (info.Length() < 1 || !info[0].IsObject()) {
+        Napi::TypeError::New(env, "Expected settings object").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+    Napi::Object args = info[0].As<Napi::Object>();
+    settings->LoadFromJson(args);
+    radar->LoadConfig();
+}
+
+
 Napi::Function RadarInfoWrapper::GetClass(Napi::Env env) {
     return DefineClass(env, "RadarInfo", {
       //InstanceMethod("init", &RadarInfoWrapper::Init),
@@ -438,6 +472,8 @@ Napi::Function RadarInfoWrapper::GetClass(Napi::Env env) {
       InstanceMethod("getPropertyType", &RadarInfoWrapper::GetPropertyType),
       InstanceMethod("getProperties", &RadarInfoWrapper::GetProperties),
       InstanceMethod("getGuardZones", &RadarInfoWrapper::GetGuardZones),
-      InstanceMethod("setGuardZones", &RadarInfoWrapper::SetGuardZones)
+      InstanceMethod("setGuardZones", &RadarInfoWrapper::SetGuardZones),
+      InstanceMethod("getSettings", &RadarInfoWrapper::GetSettings),
+      InstanceMethod("setSettings", &RadarInfoWrapper::SetSettings)
     });
 }
