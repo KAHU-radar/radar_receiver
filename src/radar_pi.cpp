@@ -189,7 +189,6 @@ int radar_pi::Init(void) {
    m_radar[r] = new RadarInfo(this, r);
    m_settings.show_radar[r] = true;
    m_settings.dock_radar[r] = false;
-   m_settings.window_pos[r] = wxPoint(30 + 540 * r, 120);
 
    // #206: Discussion on whether at this point the contour length
    // is really 6. The assert() proves this in debug (alpha) releases.
@@ -574,16 +573,10 @@ bool radar_pi::LoadConfig(void) {
 
       pConf->Read(wxString::Format(wxT("Radar%dWindowShow"), r), &m_settings.show_radar[n], true);
       pConf->Read(wxString::Format(wxT("Radar%dWindowDock"), r), &m_settings.dock_radar[n], false);
-      pConf->Read(wxString::Format(wxT("Radar%dWindowPosX"), r), &x, 30 + 540 * n);
-      pConf->Read(wxString::Format(wxT("Radar%dWindowPosY"), r), &y, 120);
-      m_settings.window_pos[n] = wxPoint(x, y);
       pConf->Read(wxString::Format(wxT("Radar%dControlShow"), r), &m_settings.show_radar_control[n], false);
       pConf->Read(wxString::Format(wxT("Radar%dTargetShow"), r), &v, true);
       ri->m_target_on_ppi.Update(v);
 
-      pConf->Read(wxString::Format(wxT("Radar%dControlPosX"), r), &x, wxDefaultPosition.x);
-      pConf->Read(wxString::Format(wxT("Radar%dControlPosY"), r), &y, wxDefaultPosition.y);
-      m_settings.control_pos[n] = wxPoint(x, y);
       LOG_DIALOG(wxT("LoadConfig: show_radar[%d]=%d control=%d,%d"), n, v, x, y);
       for (int i = 0; i < GUARD_ZONES; i++) {
         pConf->Read(wxString::Format(wxT("Radar%dZone%dStartBearing"), r, i), &ri->m_guard_zone[i]->m_start_bearing, 0);
@@ -595,9 +588,6 @@ bool radar_pi::LoadConfig(void) {
         pConf->Read(wxString::Format(wxT("Radar%dZone%dArpaOn"), r, i), &ri->m_guard_zone[i]->m_arpa_on, 0);
         ri->m_guard_zone[i]->SetType((GuardZoneType)v);
       }
-      pConf->Read(wxT("AlarmPosX"), &x, 25);
-      pConf->Read(wxT("AlarmPosY"), &y, 175);
-      m_settings.alarm_pos = wxPoint(x, y);
       pConf->Read(wxT("EnableCOGHeading"), &m_settings.enable_cog_heading, false);
       pConf->Read(wxT("AISatARPAoffset"), &m_settings.AISatARPAoffset, 50);
       if (m_settings.AISatARPAoffset < 10 || m_settings.AISatARPAoffset > 300) m_settings.AISatARPAoffset = 50;
@@ -667,8 +657,6 @@ bool radar_pi::SaveConfig(void) {
     pConf->DeleteGroup(wxT("/Plugins/Radar"));
     pConf->SetPath(wxT("/Plugins/Radar"));
 
-    pConf->Write(wxT("AlarmPosX"), m_settings.alarm_pos.x);
-    pConf->Write(wxT("AlarmPosY"), m_settings.alarm_pos.y);
     pConf->Write(wxT("AlertAudioFile"), m_settings.alert_audio_file);
     pConf->Write(wxT("DeveloperMode"), m_settings.developer_mode);
     pConf->Write(wxT("DrawingMethod"), m_settings.drawing_method);
@@ -732,10 +720,6 @@ bool radar_pi::SaveConfig(void) {
       pConf->Write(wxString::Format(wxT("Radar%dTrailsState"), r), (int)m_radar[r]->m_target_trails.GetState());
       pConf->Write(wxString::Format(wxT("Radar%dTrails"), r), m_radar[r]->m_target_trails.GetValue());
       pConf->Write(wxString::Format(wxT("Radar%dTrueTrailsMotion"), r), m_radar[r]->m_trails_motion.GetValue());
-      pConf->Write(wxString::Format(wxT("Radar%dWindowPosX"), r), m_settings.window_pos[r].x);
-      pConf->Write(wxString::Format(wxT("Radar%dWindowPosY"), r), m_settings.window_pos[r].y);
-      pConf->Write(wxString::Format(wxT("Radar%dControlPosX"), r), m_settings.control_pos[r].x);
-      pConf->Write(wxString::Format(wxT("Radar%dControlPosY"), r), m_settings.control_pos[r].y);
       pConf->Write(wxString::Format(wxT("Radar%dMainBangSize"), r), m_radar[r]->m_main_bang_size.GetValue());
       pConf->Write(wxString::Format(wxT("Radar%dAntennaForward"), r), m_radar[r]->m_antenna_forward.GetValue());
       pConf->Write(wxString::Format(wxT("Radar%dAntennaStarboard"), r), m_radar[r]->m_antenna_starboard.GetValue());

@@ -113,10 +113,6 @@ RadarInfo::RadarInfo(radar_pi *pi, int radar) {
   m_refresh_millis = 50;
 //  m_pi->m_context_menu_control_id[m_radar] = -1;
 
-  m_drag.x = 0.;
-  m_drag.y = 0.;
-  m_off_center.x = 0.;
-  m_off_center.y = 0.;
   m_panel_zoom = 0.;
   m_view_center = 1;
   m_radar_type = RT_MAX;
@@ -873,9 +869,6 @@ int RadarInfo::GetOrientation() {
   }
 
   return orientation;
-}
-
-void RadarInfo::RenderRadarImage1(wxPoint center, double scale, double overlay_rotate, bool overlay) {
 }
 
 wxString RadarInfo::GetCanvasTextTopLeft() {

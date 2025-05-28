@@ -106,7 +106,6 @@ public:
     double m_predictor;
     double m_course_log[COURSE_SAMPLES];
     int m_course_index;
-    wxPoint m_off_center, m_drag;
     double m_radar_radius; // radius in pixels of the outer ring in the panel
     double m_panel_zoom; // zooming factor for the panel image
 
@@ -252,8 +251,6 @@ public:
     void ResetRadarImage();
     void ShiftImageLonToCenter();
     void ShiftImageLatToCenter();
-    void RenderRadarImage1(
-        wxPoint center, double scale, double rotation, bool overlay);
     void ShowRadarWindow(bool show);
     void ShowControlDialog(bool show, bool reparent);
     void Shutdown();

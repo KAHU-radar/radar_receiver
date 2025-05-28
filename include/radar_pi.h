@@ -507,10 +507,6 @@ struct PersistentSettings {
     int type_detection_method; // 0 = default, 1 = ignore reports
     int AISatARPAoffset; // Rectangle side where to search AIS targets at ARPA
                          // position
-    wxPoint control_pos[RADARS]; // Saved position of control menu windows
-    wxPoint window_pos[RADARS]; // Saved position of radar windows, when
-                                // floating and not docked
-    wxPoint alarm_pos; // Saved position of alarm window
     wxString alert_audio_file; // Filepath of alarm audio file. Must be WAV.
     wxColour trail_start_colour; // Starting colour of a trail
     wxColour trail_end_colour; // Ending colour of a trail
