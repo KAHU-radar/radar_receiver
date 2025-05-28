@@ -64,10 +64,9 @@ TimedUpdateThread::~TimedUpdateThread()
     }
 
 void* TimedUpdateThread::Entry(void) {
-    wxTimerEvent dummy;
     m_is_shutdown = false;
     while (!m_shutdown) {
-        m_pi->TimedUpdate(dummy);
+        m_pi->TimedUpdate();
         m_pi->TimedControlUpdate(); // Maybe call more often?
         wxMilliSleep(500);
     }

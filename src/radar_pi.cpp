@@ -396,7 +396,7 @@ void dump_frame(RadarInfo* ri, int m_frame_counter) {
     outfile.close();
 }
 
-void radar_pi::TimedUpdate(wxTimerEvent &event) {
+void radar_pi::TimedUpdate() {
   // Started in Init(), running every 500 ms
   // No screen output in this thread
 

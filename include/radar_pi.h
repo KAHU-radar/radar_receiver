@@ -619,7 +619,7 @@ public:
     RaymarineLocate* m_raymarine_locator;
     void UpdateState(void);
     void TimedControlUpdate();
-    void TimedUpdate(wxTimerEvent& event);
+    void TimedUpdate();
     wxCriticalSection
         m_exclusive; // protects callbacks that come from multiple radars
 
