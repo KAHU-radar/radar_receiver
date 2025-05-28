@@ -50,7 +50,7 @@
         "<!(node -p \"require('node-addon-api').include_dir\")",
         
         "deps/wxWidgets/build-static/dist/include/wx-3.2",
-        "deps/wxWidgets/build-static/dist/lib/wx/include/gtk3-unicode-3.2/"
+        "deps/wxWidgets/build-static/dist/lib/wx/include/gtk3-unicode-static-3.2"
       ],
       "dependencies": [
         "<!(node -p \"require('node-addon-api').gyp\")"

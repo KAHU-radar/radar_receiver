@@ -13,7 +13,7 @@ mkdir build-static
 cd build-static
 
 ../configure \
-  --prefix=/your/custom/prefix \
+  --disable-shared \
   --with-gtk=3 \
   --enable-unicode \
   --enable-compat28 \
@@ -21,7 +21,13 @@ cd build-static
   --enable-utf8 \
   --enable-utf8only \
   --enable-std_string \
-  --prefix="$(pwd)/dist"
+  --prefix="$(pwd)/dist" \
+  --with-libjpeg=builtin \
+  --with-libpng=builtin \
+  --with-zlib=builtin \
+  --with-expat=builtin \
+  --with-libtiff=builtin \
+  --with-regex=builtin
         
 # ../configure \
 #     --disable-shared \
