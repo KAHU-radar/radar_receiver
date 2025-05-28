@@ -304,34 +304,12 @@ bool RadarInfo::Init() {
     m_control = RadarFactory::MakeRadarControl(m_radar_type, m_pi, this);
     // add context menu for control
     wxString t;
-    //wxMenu dummy_menu;
     t = _("");
     t << _("Control ") << m_name;
-    //m_pi->m_mi3[m_radar] = new wxMenuItem(&dummy_menu, -1, t);
-
-#ifdef __WXMSW__
-    wxFont *qFont = OCPNGetFont(_("Menu"), 10);
-    //m_pi->m_mi3[m_radar]->SetFont(*qFont);
-#endif
-    // m_pi->m_context_menu_control_id[m_radar] = AddCanvasContextMenuItem(m_pi->m_mi3[m_radar], m_pi);
   }
-  /*
-  if (!m_radar_panel) {
-    m_radar_panel = new RadarPanel(m_pi, this, m_pi->m_parent_window);
-    if (!m_radar_panel) {
-      wxLogError(wxT("radar_pi %s: Unable to create RadarPanel"), m_name.c_str());
-      return false;
-    }
-    if (!m_radar_panel->Create()) {
-      wxLogError(wxT("radar_pi %s: Unable to create RadarPanel"), m_name.c_str());
-      return false;
-    }
-  }
-  */
   if (!m_arpa) {
     m_arpa = new Arpa(m_pi, this);
   }
-//  m_trails = new TrailBuffer(this, m_spokes, m_spoke_len_max);
   ComputeTargetTrails();
   UpdateControlState(true);
   if (!m_receive) {
@@ -687,17 +665,6 @@ void RadarInfo::RequestRadarState(RadarState state) {
       if (state == RADAR_TRANSMIT) {
        std::cout << "BEGIN TRANSMIT\n";
         m_control->RadarTxOn();
-        // Refresh radar immediately so that we generate draw mechanisms
-        /*
-        for (int i = 0; i < wxMax(MAX_CHART_CANVAS, GetCanvasCount()); i++) {
-          if (m_pi->m_chart_overlay[i] == (int)m_radar) {
-            wxCOMMENTWindow *canvas = GetCanvasByIndex(i);
-            if (canvas) {
-              canvas->Refresh(false);
-            }
-          }
-        }
-        */
       } else if (state == RADAR_STANDBY) {
         m_control->RadarTxOff();
       } else {
@@ -709,58 +676,6 @@ void RadarInfo::RequestRadarState(RadarState state) {
 }
 
 void RadarInfo::RenderGuardZone() {
- /*
-  int start_bearing = 0, end_bearing = 0;
-  GLubyte red = 0, green = 200, blue = 0, alpha = 50;
-
-  for (size_t z = 0; z < GUARD_ZONES; z++) {
-    if (m_guard_zone[z]->m_alarm_on || m_guard_zone[z]->m_arpa_on || m_guard_zone[z]->m_show_time + 5 > time(0)) {
-      if (m_guard_zone[z]->m_type == GZ_CIRCLE) {
-        start_bearing = 0;
-        end_bearing = 359;
-      } else {
-        start_bearing = m_guard_zone[z]->m_start_bearing;
-        end_bearing = m_guard_zone[z]->m_end_bearing;
-      }
-      switch (m_pi->m_settings.guard_zone_render_style) {
-        case 1:
-          glColor4ub((GLubyte)255, (GLubyte)0, (GLubyte)0, (GLubyte)255);
-          DrawOutlineArc(m_guard_zone[z]->m_outer_range, m_guard_zone[z]->m_inner_range, start_bearing, end_bearing, true);
-          break;
-        case 2:
-          glColor4ub(red, green, blue, alpha);
-          DrawOutlineArc(m_guard_zone[z]->m_outer_range, m_guard_zone[z]->m_inner_range, start_bearing, end_bearing, false);
-        // fall thru
-        default:
-          glColor4ub(red, green, blue, alpha);
-          DrawFilledArc(m_guard_zone[z]->m_outer_range, m_guard_zone[z]->m_inner_range, start_bearing, end_bearing);
-      }
-    }
-
-    red = 0;
-    green = 0;
-    blue = 200;
-  }
-
-  int range = m_range.GetValue();
-  if (range == 0) {
-    range = 4000;
-  }
-
-  for (size_t z = 0; z < m_no_transmit_zones; z++) {
-    if (m_no_transmit_start[z].GetState() != RCS_OFF) {
-      start_bearing = m_no_transmit_start[z].GetValue();
-      end_bearing = m_no_transmit_end[z].GetValue();
-
-      if (start_bearing != end_bearing && start_bearing >= -180 && end_bearing >= -180) {
-        start_bearing = MOD_DEGREES(start_bearing);
-        end_bearing = MOD_DEGREES(end_bearing);
-        glColor4ub(250, 255, 255, alpha);
-        DrawFilledArc(range, 0, start_bearing, end_bearing);
-      }
-    }
-  }
- */
 }
 
 void RadarInfo::SetAutoRangeMeters(int autorange_to_set) {
@@ -843,15 +758,6 @@ bool RadarInfo::SetControlValue(ControlType controlType, RadarControlItem &item,
     }
 
     case CT_OVERLAY_CANVAS: {
-     /*
-      int canvas = button->GetId() - ID_RADAR_OVERLAY0;
-      int radar = item.GetValue() > 0 ? (int)m_radar : -1;
-
-      LOG_DIALOG(wxT("%s SetControlValue %s canvas=%d radar=%d"), m_name.c_str(), ControlTypeNames[controlType].c_str(), canvas,
-                 radar);
-
-      m_overlay_canvas[canvas] = radar;
-     */
       return true;
     }
 
@@ -935,12 +841,6 @@ void RadarInfo::UpdateControlState(bool all) {
     m_draw_panel.draw = 0;
   }
 #endif
-/*
-  if (m_control_dialog) {
-   m_control_dialog->UpdateControlValues(all);
-    m_control_dialog->UpdateDialogShown(false);
-  }
-*/
 }
 
 void RadarInfo::ResetRadarImage() {
@@ -957,61 +857,9 @@ void RadarInfo::ResetRadarImage() {
  * Called on GUI thread.
  */
 void RadarInfo::RefreshDisplay() {
-//  if (IsPaneShown()) {
-//    if (m_radar_panel) m_radar_panel->Refresh(false);
-//  }
 }
 
 void RadarInfo::RenderRadarImage2(DrawInfo *di, double radar_scale, double panel_rotate) {
- /*
-  wxCriticalSectionLocker lock(m_exclusive);
-  int drawing_method = m_pi->m_settings.drawing_method;
-  int state = m_state.GetValue();
-
-  if (state != RADAR_TRANSMIT) {
-    return;
-  }
-
-  // Determine if a new draw method is required
-  if (!di->draw || (drawing_method != di->drawing_method)) {
-    RadarDraw *newDraw = RadarDraw::make_Draw(this, drawing_method);
-    if (!newDraw) {
-      wxLogError(wxT("out of memory"));
-      return;
-    } else if (newDraw->Init(m_spokes, m_spoke_len_max)) {
-      wxArrayString methods;
-      RadarDraw::GetDrawingMethods(methods);
-      if (di == &m_draw_overlay) {
-        LOG_VERBOSE(wxT("%s new drawing method %s for overlay"), m_name.c_str(), methods[drawing_method].c_str());
-      } else {
-        LOG_VERBOSE(wxT("%s new drawing method %s for panel"), m_name.c_str(), methods[drawing_method].c_str());
-      }
-      if (di->draw) {
-        delete di->draw;
-      }
-      di->draw = newDraw;
-      di->drawing_method = drawing_method;
-    } else {
-      m_pi->m_settings.drawing_method = 0;
-      delete newDraw;
-    }
-    if (!di->draw) {
-      return;
-    }
-  }
-  
-  if (di == &m_draw_overlay) {
-    di->draw->DrawRadarOverlayImage(radar_scale, panel_rotate);
-  } else {
-    double panel_scale = (m_panel_zoom / m_range.GetValue()) / m_pixels_per_meter;  // typical value 0.001
-    di->draw->DrawRadarPanelImage(panel_scale, panel_rotate);
-  }
-  if (g_first_render) {
-    g_first_render = false;
-    wxLongLong startup_elapsed = wxGetUTCTimeMillis() - m_pi->GetBootMillis();
-    LOG_INFO(wxT("First radar image rendered after %llu ms\n"), startup_elapsed);
-  }
-  */
 }
 
 int RadarInfo::GetOrientation() {
@@ -1028,102 +876,6 @@ int RadarInfo::GetOrientation() {
 }
 
 void RadarInfo::RenderRadarImage1(wxPoint center, double scale, double overlay_rotate, bool overlay) {
- /*
-  bool arpa_on = false;
-  if (m_arpa) {
-    for (int i = 0; i < GUARD_ZONES; i++) {
-      if (m_guard_zone[i]->m_arpa_on) arpa_on = true;
-    }
-    if (m_arpa->GetTargetCount() > 0) {
-      arpa_on = true;
-    }
-  }
-
-  glPushAttrib(GL_COLOR_BUFFER_BIT | GL_LINE_BIT | GL_HINT_BIT);  // Save state
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-  overlay_rotate += OPENGL_ROTATION;  // Difference between OpenGL and compass + radar
-                                      // Note that for overlay=false this is purely OPENGL_ROTATION.
-
-  double panel_rotate = overlay_rotate;
-  double guard_rotate = overlay_rotate;
-  double arpa_rotate;
-
-  // So many combinations here
-
-  int orientation = GetOrientation();
-
-  if (!overlay) {
-    arpa_rotate = 0.;
-    switch (orientation) {
-      case ORIENTATION_STABILIZED_UP:
-        panel_rotate -= m_course;  // Panel only needs stabilized heading applied
-        arpa_rotate -= m_course;
-        guard_rotate += m_pi->GetHeadingTrue() - m_course;
-        break;
-      case ORIENTATION_COG_UP: {
-        double cog = m_pi->GetCOG();
-        panel_rotate -= cog;  // Panel only needs stabilized heading applied
-        arpa_rotate -= cog;
-        guard_rotate += m_pi->GetHeadingTrue() - cog;
-      } break;
-      case ORIENTATION_NORTH_UP:
-        guard_rotate += m_pi->GetHeadingTrue();
-        break;
-      case ORIENTATION_HEAD_UP:
-        arpa_rotate += -m_pi->GetHeadingTrue();  // Undo the actual heading calculation always done for ARPA
-        break;
-    }
-
-    glPushMatrix();
-    double x, y;
-    x = (double)(m_off_center.x + m_drag.x) * m_panel_zoom / m_radar_radius;
-    y = (double)(m_off_center.y + m_drag.y) * m_panel_zoom / m_radar_radius;
-    glTranslated(x, y, 0.);
-  } else {
-    guard_rotate += m_pi->GetHeadingTrue();
-    arpa_rotate = overlay_rotate - OPENGL_ROTATION;
-  }
-
-  wxLongLong now = wxGetUTCTimeMillis();
-  // Render the guard zone
-  if (!overlay || (M_SETTINGS.guard_zone_on_overlay && (M_SETTINGS.overlay_on_standby || m_state.GetValue() == RADAR_TRANSMIT))) {
-    glPushMatrix();
-    glTranslated(center.x, center.y, 0);
-    glRotated(guard_rotate, 0.0, 0.0, 1.0);
-    glScaled(scale, scale, 1.);
-    RenderGuardZone();
-    glPopMatrix();
-  }
-
-  if (m_pixels_per_meter != 0.) {
-    double radar_scale = scale / m_pixels_per_meter;
-    if (m_pi->m_settings.drawing_method) {  // for shader
-      glPushMatrix();
-      glTranslated(center.x, center.y, 0);
-      glRotated(panel_rotate, 0.0, 0.0, 1.0);
-      glScaled(radar_scale, radar_scale, 1.);
-    }
-    RenderRadarImage2(overlay ? &m_draw_overlay : &m_draw_panel, radar_scale, panel_rotate);
-    if (m_pi->m_settings.drawing_method) {
-      glPopMatrix();
-    }
-  }
-
-  if (arpa_on) {
-    if (overlay) {
-      m_arpa->DrawArpaTargetsOverlay(scale, arpa_rotate);
-    } else {
-      m_arpa->DrawArpaTargetsPanel(scale, arpa_rotate);
-    }
-  }
-  m_draw_time_ms = (wxGetUTCTimeMillis() - now).GetLo();
-  glPopAttrib();
-  if (!overlay) {
-    glPopMatrix();
-  }
- */
 }
 
 wxString RadarInfo::GetCanvasTextTopLeft() {
@@ -1255,29 +1007,6 @@ wxString RadarInfo::GetCanvasTextBottomLeft() {
         s << wxString::Format(wxT("VRM%d=%s EBL%d=%s"), b + 1, FormatDistance(m_vrm[b]), b + 1, FormatAngle(bearing));
       }
     }
-    // Add in mouse cursor location
-
-    /*
-    if (!isnan(m_mouse_vrm)) {
-      distance = m_mouse_vrm;
-      bearing = m_mouse_ebl[orientation];
-
-      if (orientation == ORIENTATION_STABILIZED_UP) {
-        bearing += m_course;
-      } else if (orientation == ORIENTATION_COG_UP) {
-        bearing += m_pi->GetCOG();
-      }
-      bearing = MOD_DEGREES_FLOAT(bearing);
-
-    } else if (!isnan(m_mouse_pos.lat) && !isnan(m_mouse_pos.lon) && GetRadarPosition(&radar_pos)) {
-      // Can't compute this upfront, ownship may move...
-      distance = local_distance(radar_pos, m_mouse_pos);
-      bearing = local_bearing(radar_pos, m_mouse_pos);
-      if (GetOrientation() != ORIENTATION_NORTH_UP) {
-        bearing -= m_pi->GetHeadingTrue();
-      }
-    }
-    */
     if (distance != 0.0) {
       if (s.length()) {
         s << wxT("\n");
@@ -1461,11 +1190,6 @@ void RadarInfo::SetMouseVrmEbl(double vrm, double ebl) {
     m_mouse_pos.lat = rad2deg(lat2);
     m_mouse_pos.lon = rad2deg(lon2);
     LOG_DIALOG(wxT("SetMouseVrmEbl(%f, %f) = %f / %f"), vrm, ebl, m_mouse_pos.lat, m_mouse_pos.lon);
-    /*
-    if (m_control_dialog) {
-      m_control_dialog->ShowCursorPane();
-    }
-    */
   } else {
     m_mouse_pos.lat = nan("");
     m_mouse_pos.lon = nan("");
@@ -1491,40 +1215,6 @@ void RadarInfo::SetBearing(int bearing) {
 }
 
 void RadarInfo::ComputeTargetTrails() {
- /*
-  static TrailRevolutionsAge maxRevs[TRAIL_ARRAY_SIZE] = {
-      SECONDS_TO_REVOLUTIONS(15),  SECONDS_TO_REVOLUTIONS(30),  SECONDS_TO_REVOLUTIONS(60), SECONDS_TO_REVOLUTIONS(180),
-      SECONDS_TO_REVOLUTIONS(300), SECONDS_TO_REVOLUTIONS(600), TRAIL_MAX_REVOLUTIONS + 1};
-
-  int target_trails = m_target_trails.GetValue();
-  RadarControlState trails_state = m_target_trails.GetState();
-
-  TrailRevolutionsAge maxRev = maxRevs[target_trails];
-  if (trails_state == RCS_OFF) {
-    maxRev = 0;
-  }
-  TrailRevolutionsAge revolution;
-  double coloursPerRevolution = 0.;
-  double colour = 0.;
-
-  // Like plotter, continuous trails are all very white (non transparent)
-  if ((trails_state != RCS_OFF) && (target_trails < TRAIL_CONTINUOUS)) {
-    coloursPerRevolution = BLOB_HISTORY_COLOURS / (double)maxRev;
-  }
-
-  LOG_VERBOSE(wxT("Target trail value %d = %d revolutions"), target_trails, maxRev);
-
-  // Disperse the BLOB_HISTORY values over 0..maxrev
-  for (revolution = 0; revolution <= TRAIL_MAX_REVOLUTIONS; revolution++) {
-    if (revolution >= 1 && revolution < maxRev) {
-      m_trail_colour[revolution] = (BlobColour)(BLOB_HISTORY_0 + (int)colour);
-      colour += coloursPerRevolution;
-    } else {
-      m_trail_colour[revolution] = BLOB_NONE;
-    }
-    // LOG_VERBOSE(wxT("ComputeTargetTrails rev=%u color=%d"), revolution, m_trail_colour[revolution]);
-  }
- */
 }
 
 wxString RadarInfo::GetInfoStatus() {
@@ -1535,12 +1225,6 @@ wxString RadarInfo::GetInfoStatus() {
 }
 
 void RadarInfo::ClearTrails() {
-/*
- if (m_trails) {
-    delete m_trails;
-  }
-  m_trails = new TrailBuffer(this, m_spokes, m_spoke_len_max);
-*/
 }
 
 int RadarInfo::GetNearestRange(int range_meters, int units) {
