@@ -562,6 +562,21 @@ struct AisArpa {
         | WANTS_PLUGIN_MESSAGING | WANTS_CURSOR_LATLON | WANTS_MOUSE_EVENTS    \
         | INSTALLS_CONTEXTMENU_ITEMS)
 
+#include <functional>
+
+typedef std::function<void(
+           int target_id,           // 1 target id
+           double distance,         // 2 Targ distance
+           double bearing,          // 3 Bearing fr own ship.
+           std::string bear_unit,   // 4 Brearing unit
+           double speed,            // 5 Target speed in knots
+           double course,           // 6 Target Course.
+           std::string course_unit, // 7 Course ref T // 8 CPA Not used // 9 TCPA Not used
+           std::string dist_unit,   // 10 S/D Unit N = knots/Nm or 
+           std::string target_name, // 11 Target name
+           std::string status       // 12 Target Status L/Q/T // 13 Ref N/A
+)> ProcessArpaTargetFN;
+
 class radar_pi /*: public opencpn_plugin_116, public wxEvtHandler */ {
 public:
     radar_pi(void* ppimgr);
@@ -870,7 +885,9 @@ private:
     wxTimer* m_update_timer;
  */
 //    DECLARE_EVENT_TABLE()
- int m_frame_counter;
+    ProcessArpaTargetFN* process_arpa_target_fn;
+    void SetProcessArpaTargetFN(ProcessArpaTargetFN* fn) { process_arpa_target_fn = fn; };
+    int m_frame_counter;
 };
 
 PLUGIN_END_NAMESPACE

@@ -48,6 +48,7 @@ private:
     TimedUpdateThread* timed_update_thread;
     Napi::ThreadSafeFunction process_radar_spoke_fn;
     Napi::ThreadSafeFunction notify_fn;
+    Napi::ThreadSafeFunction process_arpa_target_fn;
 };
 
 #endif

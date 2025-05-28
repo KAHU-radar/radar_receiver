@@ -175,6 +175,7 @@ radar_pi::radar_pi(void *ppimgr) /* : opencpn_plugin_116(ppimgr), m_raymarine_lo
   m_first_init = true;
   */
   m_frame_counter = 0;
+  process_arpa_target_fn = 0;
  }
 
 radar_pi::~radar_pi() {}

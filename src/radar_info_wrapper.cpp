@@ -32,6 +32,19 @@ struct NotifyData {
     PLUGIN_NAMESPACE::RadarControlItem *item;
 };
 
+struct ArpaTargetData {
+    int target_id;           // 1 target id
+    double distance;         // 2 Targ distance
+    double bearing;          // 3 Bearing fr own ship.
+    std::string bear_unit;   // 4 Brearing unit
+    double speed;            // 5 Target speed in knots
+    double course;           // 6 Target Course.
+    std::string course_unit; // 7 Course ref T // 8 CPA Not used // 9 TCPA Not used
+    std::string dist_unit;   // 10 S/D Unit N = knots/Nm or 
+    std::string target_name; // 11 Target name
+    std::string status;      // 12 Target Status L/Q/T // 13 Ref N/A
+};
+
 TimedUpdateThread::TimedUpdateThread(PLUGIN_NAMESPACE::radar_pi* pi) : wxThread(wxTHREAD_JOINABLE) {
     Create(64 * 1024); // Stack size
     m_pi = pi;
@@ -203,7 +216,61 @@ RadarInfoWrapper::RadarInfoWrapper(const Napi::CallbackInfo& info) : Napi::Objec
                         callback);
                }));
     }
+    
+    process_arpa_target_fn = NULL;
+    if (args.Has("arpa_cb") && args.Get("arpa_cb").IsFunction()) {
+        process_arpa_target_fn = Napi::ThreadSafeFunction::New(
+            env,
+            args.Get("arpa_cb").As<Napi::Function>(),
+            "process_arpa_target_fn",
+            0,                            // Unlimited queue
+            1                             // Only one thread will use this initially
+        );
 
+        radar->SetProcessArpaTargetFN(
+            new PLUGIN_NAMESPACE::ProcessArpaTargetFN(
+                [this](int target_id,
+                       double distance,
+                       double bearing,
+                       std::string bear_unit,
+                       double speed,
+                       double course,
+                       std::string course_unit,
+                       std::string dist_unit,
+                       std::string target_name,
+                       std::string status
+                       ) {
+                    auto callback = [](Napi::Env env, Napi::Function jsCallback, void* d) {
+                        ArpaTargetData *data = (ArpaTargetData *) d;
+                        Napi::Object obj = Napi::Object::New(env);
+                        obj.Set("target_id", data->target_id);
+                        obj.Set("distance", data->distance);
+                        obj.Set("bearing", data->bearing);
+                        obj.Set("bear_unit", data->bear_unit);
+                        obj.Set("speed", data->speed);
+                        obj.Set("course", data->course);
+                        obj.Set("course_unit", data->course_unit);
+                        obj.Set("dist_unit", data->dist_unit);
+                        obj.Set("target_name", data->target_name);
+                        obj.Set("status", data->status);
+                        jsCallback.Call({obj});
+                    };
+                    process_arpa_target_fn.NonBlockingCall(
+                        new ArpaTargetData{
+                         target_id,
+                         distance,
+                         bearing,
+                         bear_unit,
+                         speed,
+                         course,
+                         course_unit,
+                         dist_unit,
+                         target_name,
+                         status},
+                        callback);
+               }));
+    }
+ 
     //radar->m_settings.radar_count = 1;
     //radar->m_radar[0]->m_radar_type = (PLUGIN_NAMESPACE::RadarType) (args.Get("type").As<Napi::Number>().Int32Value());  // modify type of existing radar ?
     //radar->StartRadarLocators(0);
@@ -228,6 +295,7 @@ void RadarInfoWrapper::Shutdown(const Napi::CallbackInfo& info) {
     radar->DeInit();
     if (process_radar_spoke_fn) process_radar_spoke_fn.Release();
     if (notify_fn) notify_fn.Release();
+    if (process_arpa_target_fn) process_arpa_target_fn.Release();
     delete settings;
     settings = 0;
 }
