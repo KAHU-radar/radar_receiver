@@ -48,25 +48,32 @@
         
         "<!(node -p \"require('node-addon-api').include\")",
         "<!(node -p \"require('node-addon-api').include_dir\")",
-        "deps/wxWidgets/dist/include/wx-3.3",
-        "deps/wxWidgets/dist/lib/wx/include/gtk3-unicode-static-3.3",
-        "deps/wxWidgets/dist/lib"
+        
+        "deps/wxWidgets/build-static/dist/include/wx-3.2",
+        "deps/wxWidgets/build-static/dist/lib/wx/include/gtk3-unicode-3.2/"
       ],
       "dependencies": [
         "<!(node -p \"require('node-addon-api').gyp\")"
       ],
       "cflags_cc": [
         "-g", "-O0",
-        "<!(/usr/bin/env wx-config --cxxflags)",
+        "-D_FILE_OFFSET_BITS=64",
+        "-D__WXGTK__",
         "-std=c++17",
         "-frtti",
-        "-fexceptions"],
+        "-fexceptions",
+        "-pthread"],
       "defines": ["NAPI_CPP_EXCEPTIONS", "WXWIN_COMPATIBILITY_2_8=1", "wxUSE_UNSAFE_WXSTRING_CONV=1"],
       "libraries": [
         "-Wl,--whole-archive",
-        "<!(/usr/bin/env wx-config --libs)",
+        "-Ldeps/wxWidgets/build-static/dist/lib/libwx_baseu-3.2",
+        "-Ldeps/wxWidgets/build-static/dist/lib/libwx_baseu_net-3.2",
+        "-Ldeps/wxWidgets/build-static/dist/lib/libwx_baseu_xml-3.2",
+        "-Ldeps/wxWidgets/build-static/dist/lib/libwxexpat-3.2",
+        "-Ldeps/wxWidgets/build-static/dist/lib/libwxregexu-3.2",
+        "-Ldeps/wxWidgets/build-static/dist/lib/libwxzlib-3.2",
         "-Wl,--no-whole-archive",
-        "-lX11", "-lXxf86vm", "-lGL", "-lGLU", "-lpthread", "-ldl", "-lm"
+        "-lpthread", "-ldl", "-lm"
       ]
     }
   ]
