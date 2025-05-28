@@ -890,9 +890,6 @@ void ArpaTarget::RefreshTarget(int dist) {
         // if target was not seen last sweep, color yellow
         s = Q;
       }
-      // Check for AIS target at (M)ARPA position
-//      double dist2target = pol.r / m_ri->m_pixels_per_meter;
-//      if (m_pi->FindAIS_at_arpaPos(m_position.pos, dist2target)) s = L;
       PassARPAtoOCPN(&pol, s);
     }
   }

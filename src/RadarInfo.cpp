@@ -691,7 +691,7 @@ void RadarInfo::RequestRadarState(RadarState state) {
         /*
         for (int i = 0; i < wxMax(MAX_CHART_CANVAS, GetCanvasCount()); i++) {
           if (m_pi->m_chart_overlay[i] == (int)m_radar) {
-            wxWindow *canvas = GetCanvasByIndex(i);
+            wxCOMMENTWindow *canvas = GetCanvasByIndex(i);
             if (canvas) {
               canvas->Refresh(false);
             }

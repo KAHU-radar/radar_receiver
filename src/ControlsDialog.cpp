@@ -118,13 +118,6 @@ void ControlsDialog::Create(radar_pi *m_pi, RadarInfo *m_ri) {
     CONTROL_BTN(CT_OVERLAY_CANVAS, m_overlay_canvas[i]);
   }
   CONTROL_BTN_GENERAL(CT_TRANSPARENCY, m_pi->m_settings.overlay_transparency);
-  /*
-  if (!m_pi->m_ais_drawgl_broken) {
-    CONTROL_BTN(CT_TARGET_ON_PPI, m_target_on_ppi);
-  } else {
-    m_ri->m_target_on_ppi.Update(0);
-  }
-  */
   CONTROL_BTN_COND(CT_DOPPLER, m_doppler);
   CONTROL_BTN_COND(CT_DOPPLER_THRESHOLD, m_doppler_threshold);
   CONTROL_BTN_COND(CT_AUTOTTRACKDOPPLER, m_autotrack_doppler);
@@ -140,8 +133,6 @@ void ControlsDialog::Create(radar_pi *m_pi, RadarInfo *m_ri) {
     CONTROL_BTN_COND(CT_TIMED_RUN, m_timed_run);
   }
 }
-
-// wxSize g_buttonSize;
 
 
 PLUGIN_END_NAMESPACE

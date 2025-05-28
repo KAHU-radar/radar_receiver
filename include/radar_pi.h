@@ -586,183 +586,40 @@ public:
     //    The required PlugIn Methods
     int Init(void);
     bool DeInit(void);
- /*
-
-    int GetAPIVersionMajor();
-    int GetAPIVersionMinor();
-    int GetPlugInVersionMajor();
-    int GetPlugInVersionMinor();
-
-    wxBitmap* GetPlugInBitmap();
-    wxString GetCommonName();
-    wxString GetShortDescription();
-    wxString GetLongDescription();
-
-    //    The required override PlugIn Methods
-    //bool RenderGLOverlayMultiCanvas(
-    //    wxGLContext* pcontext, PlugIn_ViewPort* vp, int max_canvas);
-    // bool RenderOverlay(wxDC& dc, PlugIn_ViewPort* vp);
-//    void SetPositionFix(PlugIn_Position_Fix& pfix);
-//    void SetPositionFixEx(PlugIn_Position_Fix_Ex& pfix);
-    void SetPluginMessage(wxString& message_id, wxString& message_body);
-    void SetNMEASentence(wxString& sentence);
-    void SetDefaults(void);
-    int GetToolbarToolCount(void);
-    void OnToolbarToolCallback(int id);
-    void OnContextMenuItemCallback(int id);
-    void ShowPreferencesDialog(wxWindow* parent);
-    void SetCursorPosition(GeoPosition pos);
-    void SetCursorLatLon(double lat, double lon);
-    bool MouseEventHook(wxMouseEvent& event);
-    void PrepareContextMenu(int canvasIndex);
-
-    // Other public methods
-
-    bool EnsureRadarSelectionComplete(bool force);
-    bool MakeRadarSelection();
-
-    void NotifyRadarWindowViz();
-    void NotifyControlDialog();
-
-    void OnControlDialogClose(RadarInfo* ri);
-    void SetDisplayMode(DisplayModeType mode);
-
-    void ShowRadarControl(int radar, bool show = true, bool reparent = true);
-    void ShowGuardZoneDialog(int radar, int zone);
-    void OnGuardZoneDialogClose(RadarInfo* ri);
-    void ConfirmGuardZoneBogeys();
-    void ResetOpenGLContext();
- */
     void logBinaryData(const wxString& what, const uint8_t* data, int size);
     void StartRadarLocators(size_t r);
     void StopRadarLocators();
 
     void UpdateAllControlStates(bool all);
- /*
-
-    bool IsRadarOnScreen(int radar);
- */
     bool LoadConfig();
     bool SaveConfig();
-/*
-    long GetRangeMeters();
-    long GetOptimalRangeMeters();
-
-    bool HaveRadarSerialNo(size_t r);
-    RadarLocationInfo& GetRadarLocationInfo(size_t r);
-
- */
     void SetRadarHeading(double heading = nan(""), bool isTrue = false);
     double GetHeadingTrue()
     {
         wxCriticalSectionLocker lock(m_exclusive);
         return m_hdt;
     }
- /*
-    time_t GetHeadingTrueTimeout()
-    {
-        wxCriticalSectionLocker lock(m_exclusive);
-        return m_hdt_timeout;
-    }
-    time_t GetHeadingMagTimeout()
-    {
-        wxCriticalSectionLocker lock(m_exclusive);
-        return m_hdm_timeout;
-    }
-    VariationSource GetVariationSource()
-    {
-        wxCriticalSectionLocker lock(m_exclusive);
-        return m_var_source;
-    }
- */
     double GetCOG()
     {
         wxCriticalSectionLocker lock(m_exclusive);
         return m_cog;
     }
     HeadingSource GetHeadingSource() { return m_heading_source; }
- /*
-    bool IsInitialized() { return m_initialized; }
- */
     bool IsBoatPositionValid()
     {
         wxCriticalSectionLocker lock(m_exclusive);
         return m_bpos_set;
     }
     wxLongLong GetBootMillis() { return m_boot_time; }
- /*
-    bool IsOpenGLEnabled() { return m_opengl_mode == OPENGL_ON; }
-    wxGLContext* GetChartOpenGLContext();
- */
- /*
-    bool HaveOverlay()
-    {
-        for (int i = 0; i < CANVAS_COUNT; i++) {
-            if (m_chart_overlay[i] > -1) {
-                return true;
-            }
-        }
-        return false;
-    }
- */
     bool m_guard_bogey_confirmed;
     bool m_guard_bogey_seen; // Saw guardzone bogeys on last check
- /*
-    int m_max_canvas; // Number of canvasses in OCPN -1, 0 == single canvas, > 0
-                      // multi
-    int m_current_canvas_index;
-    wxMenuItem* m_mi3[RADARS];
-    // PlugIn_ViewPort* m_vp;
-
-    wxFont m_font; // The dialog font at a normal size
-    wxFont m_fat_font; // The dialog font at a bigger size, bold
-    wxFont m_small_font; // The dialog font at a smaller size
- */
     PersistentSettings m_settings;
     RadarInfo* m_radar[RADARS];
- /*
-    wxString m_perspective[RADARS]; // Temporary storage of window location when
-                                    // plugin is disabled
- */
     NavicoLocate* m_navico_locator;
     RaymarineLocate* m_raymarine_locator;
-//    MessageBox* m_pMessageBox;
-/*    wxWindow* m_parent_window;
-
-    // Check for AIS targets inside ARPA zone
-    vector<AisArpa> m_ais_in_arpa_zone; // Array for AIS targets in ARPA zone(s)
-    bool FindAIS_at_arpaPos(const GeoPosition& pos, const double& arpa_dist);
-#define BASE_ARPA_DIST (750.)
-    double m_arpa_max_range; //  Temporary distance(m) fron own ship to collect
-                             //  AIS targets.
-
-    bool m_ais_drawgl_broken;
-*/
-//private:
- /*
-    void RadarSendState(void);
- */
     void UpdateState(void);
- /*
-    void UpdateHeadingPositionState(void);
-    void DoTick(void);
-    void Select_Clutter(int req_clutter_index);
-    void Select_Rejection(int req_rejection_index);
-    void CheckGuardZoneBogeys(void);
-    void RenderRadarBuffer(wxDC* pdc, int width, int height);
-    void PassHeadingToOpenCPN();
-    void CacheSetToolbarToolBitmaps();
-    void SetRadarWindowViz(bool reparent = false);
-    void UpdateCOGAvg(double cog);
-    void OnTimerNotify(wxTimerEvent& event);
- */
     void TimedControlUpdate();
     void TimedUpdate(wxTimerEvent& event);
- /*
-    void ScheduleWindowRefresh();
-    void SetOpenGLMode(OpenGLMode mode);
-    int GetArpaTargetCount(void);
- */
     wxCriticalSection
         m_exclusive; // protects callbacks that come from multiple radars
 
@@ -773,20 +630,8 @@ public:
     double m_hdm; // Last magnetic heading obtained
     time_t m_hdm_timeout; // When we consider heading is lost
 public:
- /*
- */
     HeadingSource m_heading_source;
- /*
-    int m_chart_overlay[MAX_CHART_CANVAS]; // The overlay for canvas x, -1 =
-                                           // none, otherwise = radar #
-    int m_context_menu_canvas_index; // PrepareContextMenu() was last called for
-                                     // this canvas
-    bool m_render_busy;
-    int m_draw_time_overlay_ms[MAX_CHART_CANVAS];
- */
     bool m_bpos_set;
- /*
-    time_t m_bpos_timestamp;
 
     // Variation. Used to convert magnetic into true heading.
     // Can come from SetPositionFixEx, which may hail from the WMM plugin
@@ -794,97 +639,17 @@ public:
     // probably have an outdated variation model, so is less preferred. Besides,
     // some devices transmit invalid (zero) values. So we also let non-zero
     // values prevail.
-    */
     double m_var; // local magnetic variation, in degrees
     VariationSource m_var_source;
-//    time_t m_var_timeout;
 
     wxFileConfig* m_pconfig;
- /*
-    int m_context_menu_control_id[RADARS];
-    int m_context_menu_show_id;
-    int m_context_menu_hide_id;
-    int m_context_menu_acquire_radar_target;
-    int m_context_menu_delete_radar_target;
-    int m_context_menu_delete_all_radar_targets;
-
-    int m_tool_id;
-    wxBitmap* m_pdeficon;
-
-    //    Controls added to Preferences panel
-    wxCheckBox* m_pShowIcon;
-
-    // Icons
-    wxString m_shareLocn;
-    // wxBitmap *m_ptemp_icon;
-
-    //NMEA0183 m_NMEA0183;
-
-    ToolbarIconColor m_toolbar_button;
-    ToolbarIconColor m_sent_toolbar_button;
-
-    bool m_old_data_seen;
-    volatile bool m_notify_radar_window_viz;
-    volatile bool m_notify_control_dialog;
-    wxLongLong m_notify_time_ms;
- */
 #define HEADING_TIMEOUT (5)
-/*
-//    GuardZoneBogey* m_bogey_dialog;
-    time_t m_alarm_sound_timeout;
-    time_t m_guard_bogey_timeout; // If we haven't seen bogeys for this long we
-                                  // reset confirm
-#define CONFIRM_RESET_TIMEOUT (15)
-
-// Compute average COG same way as OpenCPN
-#define MAX_COG_AVERAGE_SECONDS (60)
-    double m_COGTable[MAX_COG_AVERAGE_SECONDS];
-    int m_COGAvgSec; // Default 15, comes from OCPN settings
-    double m_COGAvg; // Average COG over m_COGTable
- */
     double m_cog; // Value of m_COGAvg at rotation time
- /*
-    time_t m_cog_timeout; // When m_cog will be set again
- */
     double m_vp_rotation; // Last seen vp->rotation
-/*
-    // Keep last state of ContextMenu state sent, to avoid redraws
-    bool m_context_menu_show;
-    bool m_context_menu_arpa;
-
-    // Cursor position. Used to show position in radar window
-    GeoPosition m_cursor_pos;
-    GeoPosition m_right_click_pos;
-*/
     GeoPosition m_ownship;
-/*
-    GeoPosition m_ownship_old;
-    ExtendedPosition m_GPS_position;
-
-public:
-    GPSKalmanFilter* m_GPS_filter;
-    bool m_predicted_position_initialised;
-    ExtendedPosition
-        m_expected_position; // updated own position at time of last GPS update
-    ExtendedPosition m_last_fixed; // best estimate position at last measurement
-private:
- */
-
     bool m_initialized; // True if Init() succeeded and DeInit() not called yet.
     bool m_first_init; // True in first Init() call.
     wxLongLong m_boot_time; // millis when started
- /*
-
-    OpenGLMode m_opengl_mode;
-    volatile bool m_opengl_mode_changed;
-
-    wxGLContext* m_opencpn_gl_context;
-    bool m_opencpn_gl_context_broken;
-
-    wxTimer* m_timer;
-    wxTimer* m_update_timer;
- */
-//    DECLARE_EVENT_TABLE()
     ProcessArpaTargetFN* process_arpa_target_fn;
     void SetProcessArpaTargetFN(ProcessArpaTargetFN* fn) { process_arpa_target_fn = fn; };
     int m_frame_counter;
