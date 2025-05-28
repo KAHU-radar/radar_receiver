@@ -78,6 +78,9 @@ async function ensureFileInitialized() {
         ri.setTransmit(true);
         state.transmitting = true;
       }
+    },
+    arpa_cb: (target) => {
+      console.log("ARPA", target);
     }
   });
   ri.setPosition({lat: 0.0, lon: 0.0});
