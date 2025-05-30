@@ -62,7 +62,9 @@
         "-std=c++17",
         "-frtti",
         "-fexceptions",
-        "-pthread"],
+        "-pthread",
+        "-fPIC"
+        ],
       "defines": ["NAPI_CPP_EXCEPTIONS", "WXWIN_COMPATIBILITY_2_8=1", "wxUSE_UNSAFE_WXSTRING_CONV=1"],
       "libraries": [
         "-Wl,--whole-archive",
@@ -74,7 +76,15 @@
         "<!(pwd)/deps/wxWidgets/build-static/dist/lib/libwxzlib-3.2.a",
         "-Wl,--no-whole-archive",
         "-lpthread", "-ldl", "-lm"
-      ]
+      ],
+      "actions": [
+        {
+          "action_name": "run_build_deps",
+          "inputs": [],
+          "outputs": ["deps/wxWidgets/build-static/dist"],
+          "action": ["sh", "./build-deps.sh"]
+        }
+      ]      
     }
   ]
 }

@@ -1,21 +1,20 @@
 {
-  "name": "wx-addon",
-  "version": "0.1.0",
+  "name": "radar-receiver",
+  "version": "0.0.4",
   "main": "index.js",
-  "gypfile": true,
   "scripts": {
-    "install": "prebuild-install || node-gyp rebuild",
-    "prebuild": "prebuildify --napi --strip",
-    "build": "node-gyp rebuild"
+    "install": "node-gyp-build"
   },
   "dependencies": {
-    "node-addon-api": "^7.1.1",
-    "prebuild-install": "^7.1.0"
+    "@mapbox/node-pre-gyp": "^2.0.0",
+    "node-addon-api": "^7.1.1"
   },
   "devDependencies": {
+    "node-gyp-build": "^4.3.0",
     "prebuildify": "^5.0.0"
   },
   "files": [
+    "binding.gyp",
     "prebuilds/",
     "index.js"
   ]

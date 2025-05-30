@@ -1,9 +1,6 @@
-cd deps/wxWidgets
-mkdir -p build
-cd build
-../configure \
-  --disable-shared \
-  --with-gtk=3 \
-  --prefix="$(pwd)/../dist"
-make -j$(nproc)
-#make install
+cd deps
+
+if ! [ -e wxWidgets/build-static/dist ]; then
+  git submodule update --checkout
+  bash build-wxwidgets.sh
+fi
