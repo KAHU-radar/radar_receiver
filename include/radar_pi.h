@@ -42,21 +42,15 @@
 #include "RadarLocationInfo.h"
 #include "config.h"
 #include "drawutil.h"
-/*
-#include "nmea0183.h"
-#include "nmea0183.hpp"
-*/
 #include "pi_common.h"
 #include "../deps/radar_pi/include/raymarine/RaymarineLocate.h"
 #include "socketutil.h"
-//#include "wx/jsonreader.h"
 
 // Load the ocpn_plugin. On OS X this generates many warnings, suppress these.
 #ifdef __WXOSX__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Woverloaded-virtual"
 #endif
-//#include "ocpn_plugin.h"
 #ifdef __WXOSX__
 #pragma clang diagnostic pop
 #endif
@@ -64,7 +58,6 @@
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 PLUGIN_BEGIN_NAMESPACE
-//using ::NMEA0183;
 
 // Define the following to make sure we have no race conditions during thread
 // stop. #define TEST_THREAD_RACES
@@ -74,12 +67,10 @@ class GuardZone;
 class RadarInfo;
 
 class ControlsDialog;
-//class MessageBox;
 class OptionsDialog;
 class RadarReceive;
 class RadarControl;
 class radar_pi;
-//class GuardZoneBogey;
 class Arpa;
 class GPSKalmanFilter;
 class RaymarineLocate;
@@ -333,12 +324,29 @@ public:
         blue = b;
     }
 
+    PixelColour(const wxString& str) {
+        // Example: parse the string like "#RRGGBB"
+        if (str.StartsWith("#") && str.length() == 7) {
+            long r, g, b;
+            str.Mid(1, 2).ToLong(&r, 16);
+            str.Mid(3, 2).ToLong(&g, 16);
+            str.Mid(5, 2).ToLong(&b, 16);
+            red = static_cast<uint8_t>(r);
+            green = static_cast<uint8_t>(g);
+            blue = static_cast<uint8_t>(b);
+        } else {
+            red = green = blue = 0;  // default/fallback
+        }
+    }
+ 
     uint8_t Red() const { return red; }
 
     uint8_t Green() const { return green; }
 
     uint8_t Blue() const { return blue; }
 
+    uint8_t Alpha() const { return 255; }
+ 
     PixelColour operator=(const PixelColour& other)
     {
         if (this != &other) {
@@ -349,15 +357,10 @@ public:
         return *this;
     }
 
-    PixelColour operator=(const wxColour& other)
-    {
-        this->red = other.Red();
-        this->green = other.Green();
-        this->blue = other.Blue();
-
-        return *this;
+    wxString GetAsString() {
+        return wxString::Format("#%02X%02X%02X", red, green, blue);
     }
-
+ 
 private:
     uint8_t red;
     uint8_t green;

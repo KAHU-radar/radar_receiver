@@ -1,5 +1,4 @@
 #include <napi.h>
-#include <wx/wx.h>
 #include <wx/string.h>
 #include "radar_info_wrapper.h"
 
@@ -11,9 +10,9 @@ bool EnsureWxInitialized() {
     static bool initialized = false;
 
     std::call_once(initFlag, []() {
-        if (wxApp::GetInstance() == nullptr) {
+//        if (wxApp::GetInstance() == nullptr) {
             initialized = wxInitialize();
-        }
+//        }
     });
 
     return initialized;

@@ -66,12 +66,12 @@
       "defines": ["NAPI_CPP_EXCEPTIONS", "WXWIN_COMPATIBILITY_2_8=1", "wxUSE_UNSAFE_WXSTRING_CONV=1"],
       "libraries": [
         "-Wl,--whole-archive",
-        "-Ldeps/wxWidgets/build-static/dist/lib/libwx_baseu-3.2",
-        "-Ldeps/wxWidgets/build-static/dist/lib/libwx_baseu_net-3.2",
-        "-Ldeps/wxWidgets/build-static/dist/lib/libwx_baseu_xml-3.2",
-        "-Ldeps/wxWidgets/build-static/dist/lib/libwxexpat-3.2",
-        "-Ldeps/wxWidgets/build-static/dist/lib/libwxregexu-3.2",
-        "-Ldeps/wxWidgets/build-static/dist/lib/libwxzlib-3.2",
+        "<!(pwd)/deps/wxWidgets/build-static/dist/lib/libwx_baseu_net-3.2.a",
+        "<!(pwd)/deps/wxWidgets/build-static/dist/lib/libwx_baseu_xml-3.2.a",
+        "<!(pwd)/deps/wxWidgets/build-static/dist/lib/libwx_baseu-3.2.a",
+        "<!(pwd)/deps/wxWidgets/build-static/dist/lib/libwxexpat-3.2.a",
+        "<!(pwd)/deps/wxWidgets/build-static/dist/lib/libwxregexu-3.2.a",
+        "<!(pwd)/deps/wxWidgets/build-static/dist/lib/libwxzlib-3.2.a",
         "-Wl,--no-whole-archive",
         "-lpthread", "-ldl", "-lm"
       ]

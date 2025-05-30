@@ -1,6 +1,5 @@
 #include <wx/fileconf.h>
 #include <wx/mstream.h>
-#include <wx/wx.h>
 #include <napi.h>
 
 class Settings {
