@@ -7,6 +7,8 @@ making it possible to use them outside of OpenCPN and get direct programmatic ac
 
 This opens the possibility to do experimentation on advanced image analysis on radar imagery, e.g. using machine learning or existing traditional computer vision libraries.
 
+Note: This library *will be replaced* by [Mayara](https://github.com/keesverruijt/mayara) once Mayara can be imported as a nodejs module instead of run as a separate server, and once it supports all radars this library supports.
+
 # Installation and usage
 
 ```
