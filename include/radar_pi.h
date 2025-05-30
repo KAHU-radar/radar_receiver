@@ -573,7 +573,7 @@ typedef std::function<void(
            std::string status       // 12 Target Status L/Q/T // 13 Ref N/A
 )> ProcessArpaTargetFN;
 
-class radar_pi /*: public opencpn_plugin_116, public wxEvtHandler */ {
+class radar_pi {
 public:
     radar_pi(void* ppimgr);
     ~radar_pi();
