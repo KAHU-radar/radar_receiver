@@ -95,7 +95,6 @@ enum { // process ID's
 };
 
 class RadarControlButton;
-class RadarRangeControlButton;
 class RadarButton;
 
 extern wxString guard_zone_names[2];
@@ -188,7 +187,6 @@ protected:
 };
 
 class RadarControlButton {
-//    friend class RadarRangeControlButton;
 
 public:
     RadarControlButton(ControlsDialog* parent, ControlInfo& ctrl, RadarControlItem* item) {
