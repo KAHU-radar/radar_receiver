@@ -50,6 +50,7 @@ async function ensureFileInitialized() {
           Radar0Zone0Type: '1',
           Radar0Zone0AlarmOn: '0',
           Radar0Zone0ArpaOn: '1',
+          VerboseLog: '77'
         }
       }
     },
