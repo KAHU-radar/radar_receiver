@@ -62,7 +62,7 @@ ControlsDialog::~ControlsDialog() {
   }
   for (size_t i = 0; i < ARRAY_SIZE(m_button); i++) {
     if (m_button[i]) {
-      delete[] m_button[i];
+      delete m_button[i];
     }
   }
 }

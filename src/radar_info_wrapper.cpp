@@ -65,11 +65,18 @@ TimedUpdateThread::~TimedUpdateThread()
 
 void* TimedUpdateThread::Entry(void) {
     m_is_shutdown = false;
+    struct Finalizer {
+        volatile bool& ref;
+        Finalizer(volatile bool& r) : ref(r) {}
+        ~Finalizer() { ref = true; }
+    } finalizer(m_is_shutdown);
+ 
     while (!m_shutdown) {
         m_pi->TimedUpdate();
         m_pi->TimedControlUpdate(); // Maybe call more often?
         wxMilliSleep(500);
     }
+    
     return 0;
 }
 
