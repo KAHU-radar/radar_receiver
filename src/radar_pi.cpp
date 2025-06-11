@@ -158,6 +158,11 @@ int radar_pi::Init(void) {
     return 0; //PLUGIN_OPTIONS;
   }
 
+  time_t now = time(0);
+
+  m_hdt = 0.0;
+  m_hdt_timeout = now + WATCHDOG_TIMEOUT;
+  m_hdm_timeout = now + WATCHDOG_TIMEOUT;
   m_var = 0.0;
   m_var_source = VARIATION_SOURCE_NONE;
   m_bpos_set = false;
