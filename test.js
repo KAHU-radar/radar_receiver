@@ -57,7 +57,6 @@ async function ensureFileInitialized() {
     spoke_cb: async (angle, bearing, data, range_meters, time) => {
      if (state.transmitting) {
   //     console.log("SPOKE", angle, bearing, data, range_meters, time);
-
         if (angle < 0 || angle >= TOTAL_ROWS) {
           console.warn(`Invalid angle: ${angle}`);
           return;
@@ -77,6 +76,9 @@ async function ensureFileInitialized() {
         console.log("Start transmitting");
         ri.setProperty('CT_RANGE', 10000);
         ri.setTransmit(true);
+        state.transmitting = true;
+      } else if (item.type.id == "CT_STATE" && item.value.value == 'RADAR_TRANSMIT') {
+        console.log("Radar is now transmitting");
         state.transmitting = true;
       }
     },
